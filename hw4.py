@@ -26,9 +26,9 @@ def reverse_list(s):
         counter += 1
     return None
 
-f = digits = [6, 2, 9, 5, 1, 4, 1, 3]
-reverse_list(digits)
-print (f)
+#f = digits = [6, 2, 9, 5, 1, 4, 1, 3]
+#reverse_list(digits)
+#print (f)
 
 
 
