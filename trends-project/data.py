@@ -3,12 +3,19 @@
 import os
 import re
 import string
+import sys
 from datetime import datetime
 from ucb import main, interact
 
-DATA_PATH = 'data' + os.sep
+# Look for data directory
+PY_PATH = sys.argv[0]
+if PY_PATH.endswith('doctest.py') and len(sys.argv) > 1:
+    PY_PATH = sys.argv[1]
+DATA_PATH = os.path.join(os.path.dirname(PY_PATH), 'data') + os.sep
+if not os.path.exists(DATA_PATH):
+    DATA_PATH = 'data' + os.sep
 
-def load_sentiments(file_name="data"+os.sep+"sentiments.csv"):
+def load_sentiments(file_name=DATA_PATH + "sentiments.csv"):
     """Read the sentiment file and return a dictionary containing the sentiment
     score of each word, a value from -1 to +1.
     """
@@ -44,7 +51,7 @@ def generate_filtered_file(unfiltered_name, term):
 
 def load_tweets(make_tweet, term='my job', file_name='all_tweets.txt'):
     """Return the list of tweets in file_name that contain term.
-    
+
     make_tweet -- a constructor that takes four arguments:
       - a string containing the words in the tweet
       - a datetime.datetime object representing the time of the tweet

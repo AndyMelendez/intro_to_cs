@@ -1,5 +1,6 @@
 """Geography and projection utilities."""
 
+from data import DATA_PATH
 from math import sin, cos, atan2, radians, sqrt
 from json import JSONDecoder
 
@@ -16,9 +17,9 @@ def longitude(position):
     return position[1]
 
 def geo_distance(position1, position2):
-    """Return the great circle distance (in miles) between two 
+    """Return the great circle distance (in miles) between two
     geographic positions.
-    
+
     Uses the "haversine" formula.
     http://en.wikipedia.org/wiki/Haversine_formula
 
@@ -30,7 +31,7 @@ def geo_distance(position1, position2):
     lon1, lon2 = [radians(longitude(p)) for p in (position1, position2)]
     dlat, dlon = lat2-lat1, lon2-lon1
     a = sin(dlat/2) ** 2  + sin(dlon/2) ** 2 * cos(lat1) * cos(lat2)
-    c = 2 * atan2(sqrt(a), sqrt(1-a)); 
+    c = 2 * atan2(sqrt(a), sqrt(1-a));
     return earth_radius * c;
 
 def position_to_xy(position):
@@ -46,7 +47,7 @@ def position_to_xy(position):
 
 def albers_projection(origin, parallels, translate, scale):
     """Return an Albers projection from geographic positions to x-y positions.
-    
+
     Derived from Mike Bostock's Albers javascript implementation for D3
     http://mbostock.github.com/d3
     http://mathworld.wolfram.com/AlbersEqual-AreaConicProjection.html
@@ -78,13 +79,13 @@ _alaska = albers_projection(make_position(60, -160), [55,65], [150,440], 400)
 _hawaii = albers_projection(make_position(20, -160), [8,18], [300,450], 1000)
 
 def load_states():
-    """Load the coordinates of all the state outlines and return them 
+    """Load the coordinates of all the state outlines and return them
     in a dictionary, from names to shapes lists.
 
     >>> len(load_states()['HI'])  # Hawaii has 5 islands
     5
     """
-    json_data_file = open("data/states.json", encoding='utf8')
+    json_data_file = open(DATA_PATH + 'states.json', encoding='utf8')
     states = JSONDecoder().decode(json_data_file.read())
     for state, shapes in states.items():
         for index, shape in enumerate(shapes):

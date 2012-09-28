@@ -19,9 +19,9 @@ def make_tweet(text, time, lat, lon):
     latitude  -- A number; the latitude of the tweet's location
     longitude -- A number; the longitude of the tweet's location
 
-    >>> t = make_tweet("Just ate lunch", datetime(2012, 9, 24, 13), 38, 74)
+    >>> t = make_tweet("just ate lunch", datetime(2012, 9, 24, 13), 38, 74)
     >>> tweet_words(t)
-    ['Just', 'ate', 'lunch']
+    ['just', 'ate', 'lunch']
     >>> tweet_time(t)
     datetime.datetime(2012, 9, 24, 13, 0)
     >>> p = tweet_location(t)
@@ -112,7 +112,7 @@ def analyze_tweet_sentiment(tweet):
     >>> round(sentiment_value(analyze_tweet_sentiment(positive)), 5)
     0.29167
     >>> negative = make_tweet("Thinking, 'I hate my job'", None, 0, 0)
-    >>> analyze_tweet_sentiment(sentiment_value(negative))
+    >>> sentiment_value(analyze_tweet_sentiment(negative))
     -0.25
     >>> no_sentiment = make_tweet("Go bears!", None, 0, 0)
     >>> has_sentiment(analyze_tweet_sentiment(no_sentiment))
@@ -309,7 +309,9 @@ def draw_map_for_term(term='my job'):
     state_sentiments = average_sentiments(tweets_by_state)
     draw_state_sentiments(state_sentiments)
     for tweet in tweets:
-        draw_dot(tweet_location(tweet), analyze_tweet_sentiment(tweet))
+        s = analyze_tweet_sentiment(tweet)
+        if has_sentiment(s):
+            draw_dot(tweet_location(tweet), sentiment_value(s))
     wait()
 
 def draw_map_by_hour(term='my job', pause=0.5):

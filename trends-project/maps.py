@@ -25,16 +25,16 @@ def get_sentiment_color(sentiment, sentiment_scale=4):
         index = len(SENTIMENT_COLORS) - 1
     return SENTIMENT_COLORS[index]
 
-def draw_state(shapes, sentiment=None):
+def draw_state(shapes, sentiment_value=None):
     """Draw the named state in the given color on the canvas.
 
     state -- a list of list of polygons (which are lists of positions)
-    sentiment -- a number between -1 (negative) and 1 (positive)
+    sentiment_value -- a number between -1 (negative) and 1 (positive)
     canvas -- the graphics.Canvas object
     """
     for polygon in shapes:
         vertices = [position_to_xy(position) for position in polygon]
-        color = get_sentiment_color(sentiment)
+        color = get_sentiment_color(sentiment_value)
         get_canvas().draw_polygon(vertices, fill_color=color)
 
 def draw_name(name, location):
@@ -45,14 +45,14 @@ def draw_name(name, location):
     center = position_to_xy(location)
     get_canvas().draw_text(name.upper(), center, anchor='center', style='bold')
 
-def draw_dot(location, sentiment=None, radius=3):
+def draw_dot(location, sentiment_value=None, radius=3):
     """Draw a small dot at location.
 
     location -- a position
-    sentiment -- a number between -1 (negative) and 1 (positive)
+    sentiment_value -- a number between -1 (negative) and 1 (positive)
     """
     center = position_to_xy(location)
-    color = get_sentiment_color(sentiment)
+    color = get_sentiment_color(sentiment_value)
     get_canvas().draw_circle(center, radius, fill_color=color)
 
 def memoize(fn):

@@ -5,7 +5,7 @@ import math
 
 try:
     import tkinter
-except Exception(e):
+except Exception as e:
     print('Could not load tkinter: ' + str(e))
 
 FRAME_TIME = 1/30
@@ -15,7 +15,7 @@ class Canvas(object):
 
     draw_* methods return the id number of a shape object in the underlying Tk
     object.  This id can be passed to move_* and edit_* methods.
-    
+
     Canvas is a singleton; only one Canvas instance can be created.
 
     """
@@ -39,7 +39,7 @@ class Canvas(object):
         self._tk.title(title or 'Graphics Window')
         self._tk.bind('<Button-1>', self._click)
         self._click_pos = None
-        
+
         # Canvas object
         self._canvas = tkinter.Canvas(self._tk, width=width, height=height)
         self._canvas.pack()
@@ -59,11 +59,11 @@ class Canvas(object):
 
         points -- a list of (x, y) pairs encoding pixel positions
         """
-        if fill_color == None: 
+        if fill_color == None:
             fill_color = color
-        if filled == 0: 
+        if filled == 0:
             fill_color = ""
-        return self._canvas.create_polygon(flattened(points), outline=color, fill=fill_color, 
+        return self._canvas.create_polygon(flattened(points), outline=color, fill=fill_color,
                 smooth=smooth, width=width)
 
     def draw_circle(self, center, radius, color='Black', fill_color=None, filled=1, width=1):
@@ -71,9 +71,9 @@ class Canvas(object):
 
         center -- an (x, y) pair encoding a pixel position
         """
-        if fill_color == None: 
+        if fill_color == None:
             fill_color = color
-        if filled == 0: 
+        if filled == 0:
             fill_color = ""
         x0, y0 = [c - radius for c in center]
         x1, y1 = [c + radius for c in center]
@@ -88,13 +88,13 @@ class Canvas(object):
                 image = image.zoom(int(scale))
             else:
                 image = image.subsample(int(1/scale))
-            self._images[key] = image 
+            self._images[key] = image
 
         image = self._images[key]
         x, y = pos
         return self._canvas.create_image(x, y, image=image, anchor=anchor)
 
-    def draw_text(self, text, pos, color='Black', font='Arial', 
+    def draw_text(self, text, pos, color='Black', font='Arial',
                   size=12, style='normal', anchor=tkinter.NW):
         """Draw text and return its tkinter id."""
         x, y = pos
@@ -112,7 +112,7 @@ class Canvas(object):
             self._canvas.itemconfigure(id, font=(font, str(size), style))
 
     def animate_shape(self, id, duration, points_fn, frame_count=0):
-        """Animate an existing shape over points.""" 
+        """Animate an existing shape over points."""
         max_frames = duration // FRAME_TIME
         points = points_fn(frame_count)
         self._canvas.coords(id, flattened(points))
@@ -135,13 +135,13 @@ class Canvas(object):
 
     def wait_for_click(self, seconds=0):
         """Return (position, elapsed) pair of click position and elapsed time.
-        
+
         position: (x,y) pixel position of click
         elapsed:  milliseconds elapsed since call
         seconds:  maximum number of seconds to wait for a click
 
         If there is still no click after the given time, return (None, seconds).
-        
+
         """
         elapsed = 0
         while elapsed < seconds or seconds == 0:
@@ -173,7 +173,7 @@ def flattened(points):
     return tuple(coords)
 
 def paired(coords):
-    """Return a list of pairs from a flat list of coordinates.""" 
+    """Return a list of pairs from a flat list of coordinates."""
     assert len(coords) % 2 == 0, 'Coordinates are not paired.'
     points = []
     x = None
