@@ -19,17 +19,19 @@ def reverse_list(s):
     >>> digits
     [6, 2, 9, 5, 1, 4, 1, 3]
     """
-    counter, k = 0, len.s
-    if counter <= len.s:
-        s[k] = s[k - 1]
-        k += 1
-        counter += 1
+
+    initial = 0
+    final = (len(s) - 1)
+    temp = s[initial]
+    while initial <= len(s) and final >= 0:
+	    temp = s[initial]
+	    s[initial] = s[final]
+	    s[final] = temp
+	    initial += 1
+	    final -= 1 
+	    if (initial >= final or final < initial):
+	        break
     return None
-
-#f = digits = [6, 2, 9, 5, 1, 4, 1, 3]
-#reverse_list(digits)
-#print (f)
-
 
 
 # Q2:  Define a function make_accumulator that returns an accumulator function, which takes one numerical argument and returns the sum of all arguments ever passed to accumulator. Use a list and not a nonlocal statement:
@@ -54,8 +56,20 @@ def make_accumulator():
     >>> acc(4)
     29
     """
-    "*** YOUR CODE HERE ***"
+    def accumalator(argument):
+        total = list()
+        total.append(argument)
+        total = sum(total)
+        return total
+    return accumalator
 
+"""
+acc = make_accumulator()
+x = acc(15)
+print (x)
+x = acc(10)
+print (x)
+"""
 
 # Q3: Define a function make_accumulator_nonlocal that returns an accumulator function, which takes one numerical argument and returns the sum of all arguments ever passed to accumulator. Use a nonlocal statement, but no list or dict:
 
@@ -79,8 +93,12 @@ def make_accumulator_nonlocal():
     >>> acc(4)
     29
     """
-    "*** YOUR CODE HERE ***"
-
+    total = 0
+    def accumulator(amount):
+        nonlocal total          
+        total = total + amount                 
+        return total
+    return accumulator
 
 # Q4: Define a function make_counter that returns a counter function, which takes an immutable key and a numerical value argument and returns the sum of all arguments ever passed to counter with that same key:
 
@@ -104,7 +122,14 @@ def make_counter():
     >>> c2(3, c('b', 6))
     17
     """
-    "*** YOUR CODE HERE ***"
+    def counter(key, value):
+	    total = numerals
+	    numerals[key] = value
+	
+c = make_counter()
+x = c ('a', 3)
+print (x)
+	
 
 
 # Q5: Define the repeated function from Homework 2 by calling reduce with compose1 as the first argument. Add only a single expression to the starter implementation below:
@@ -144,21 +169,20 @@ def card(n):
 def shuffle(cards):
     """Return a shuffled list that interleaves the two halves of cards.
 
-    >>> suits = ['â™¡', 'â™¢', 'â™¤', 'â™§']
+    >>> suits = ['♡', '♢', '♤', '♧']
     >>> cards = [card(n) + suit for n in range(1,14) for suit in suits]
     >>> cards[:12]
-    ['Aâ™¡', 'Aâ™¢', 'Aâ™¤', 'Aâ™§', '2â™¡', '2â™¢', '2â™¤', '2â™§', '3â™¡', '3â™¢', '3â™¤', '3â™§']
+    ['A♡', 'A♢', 'A♤', 'A♧', '2♡', '2♢', '2♤', '2♧', '3♡', '3♢', '3♤', '3♧']
     >>> cards[26:30]
-    ['7â™¤', '7â™§', '8â™¡', '8â™¢']
+    ['7♤', '7♧', '8♡', '8♢']
     >>> shuffle(cards)[:12]
-    ['Aâ™¡', '7â™¤', 'Aâ™¢', '7â™§', 'Aâ™¤', '8â™¡', 'Aâ™§', '8â™¢', '2â™¡', '8â™¤', '2â™¢', '8â™§']
+    ['A♡', '7♤', 'A♢', '7♧', 'A♤', '8♡', 'A♧', '8♢', '2♡', '8♤', '2♢', '8♧']
     >>> shuffle(shuffle(cards))[:12]
-    ['Aâ™¡', '4â™¢', '7â™¤', '10â™§', 'Aâ™¢', '4â™¤', '7â™§', 'Jâ™¡', 'Aâ™¤', '4â™§', '8â™¡', 'Jâ™¢']
+    ['A♡', '4♢', '7♤', '10♧', 'A♢', '4♤', '7♧', 'J♡', 'A♤', '4♧', '8♡', 'J♢']
     >>> cards[:12]  # Should not be changed
-    ['Aâ™¡', 'Aâ™¢', 'Aâ™¤', 'Aâ™§', '2â™¡', '2â™¢', '2â™¤', '2â™§', '3â™¡', '3â™¢', '3â™¤', '3â™§']
+    ['A♡', 'A♢', 'A♤', 'A♧', '2♡', '2♢', '2♤', '2♧', '3♡', '3♢', '3♤', '3♧']
     >>> repeated(shuffle, 8)(cards) == cards
     True
     """
     assert len(cards) % 2 == 0, 'len(cards) must be even'
     "*** YOUR CODE HERE ***"
-
