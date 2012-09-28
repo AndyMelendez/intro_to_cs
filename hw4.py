@@ -56,20 +56,12 @@ def make_accumulator():
     >>> acc(4)
     29
     """
+    total = []
     def accumalator(argument):
-        total = list()
         total.append(argument)
-        total = sum(total)
-        return total
+        return sum(total)
     return accumalator
 
-"""
-acc = make_accumulator()
-x = acc(15)
-print (x)
-x = acc(10)
-print (x)
-"""
 
 # Q3: Define a function make_accumulator_nonlocal that returns an accumulator function, which takes one numerical argument and returns the sum of all arguments ever passed to accumulator. Use a nonlocal statement, but no list or dict:
 
@@ -122,14 +114,15 @@ def make_counter():
     >>> c2(3, c('b', 6))
     17
     """
+    table = {}
     def counter(key, value):
-	    total = numerals
-	    numerals[key] = value
-	
-c = make_counter()
-x = c ('a', 3)
-print (x)
-	
+        nonlocal table
+        if key in list(table):
+            table[key] = table[key] + value
+        else:
+            table[key] = value
+        return table[key]
+    return counter
 
 
 # Q5: Define the repeated function from Homework 2 by calling reduce with compose1 as the first argument. Add only a single expression to the starter implementation below:
@@ -155,7 +148,7 @@ def repeated(f, n):
     152587890625
     """
     assert type(n) == int and n > 0, "Bad n"
-    return reduce(compose1, "*** YOUR CODE HERE ***" )
+    return reduce(compose1, [f]*n)
 
 
 # Q6: Define a function shuffle that takes a list with an even number of elements (cards) and creates a new list that interleaves the elements of the first half with the elements of the second half:
