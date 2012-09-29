@@ -178,4 +178,18 @@ def shuffle(cards):
     True
     """
     assert len(cards) % 2 == 0, 'len(cards) must be even'
-    "*** YOUR CODE HERE ***"
+    shuffled = []
+    for i in range(0, len(cards)):
+	    shuffled.append(cards[i])
+	
+	first_half = card[0 : len(cards)/2]
+	second_half = card[0 : len(cards)/2 : len(cards)]
+
+suits = ['♡', '♢', '♤', '♧']
+cards = [card(n) + suit for n in range(1,14) for suit in suits]
+x = cards[:12]
+print (x)
+y = cards[26:30]
+print(y)
+z = shuffle(cards)[:12]
+print(z)
