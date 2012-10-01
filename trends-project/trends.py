@@ -3,7 +3,7 @@
 # Class: CS61A
 # Date: 10/03/12
 	
-# Preprosessor Stuff:
+# Preprocesessor Stuff:
 	
 from data import word_sentiments, load_tweets
 from datetime import datetime
@@ -37,15 +37,15 @@ def make_tweet(text, time, lat, lon):
 
 def tweet_words(tweet):
     """Return a list of the words in the text of a tweet."""
-    # return extract_words(text)
+    #return extract_words()
 
 def tweet_time(tweet):
     """Return the datetime that represents when the tweet was posted."""
-    "*** YOUR CODE HERE ***"
+    #return datetime(extract_words())
 
 def tweet_location(tweet):
     """Return a position (see geo.py) that represents the tweet's location."""
-    "*** YOUR CODE HERE ***"
+    #return make_position(lat, lon)
 
 def tweet_string(tweet):
     """Return a string representing the tweet."""
@@ -268,7 +268,7 @@ def group_tweets_by_hour(tweets):
     "*** YOUR CODE HERE ***"
     return tweets_by_hour
 
-'
+
 # Interaction (You don't need to read this section of the program):
 
 def print_sentiment(text='Are you virtuous or verminous?'):
