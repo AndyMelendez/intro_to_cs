@@ -1,5 +1,10 @@
-"""Visualizing Twitter Sentiment Across America"""
-
+# Project: Trends: Visualizing Twitter Sentiment Across America
+# Author: Krishna Parashar
+# Class: CS61A
+# Date: 10/03/12
+	
+# Preprosessor Stuff:
+	
 from data import word_sentiments, load_tweets
 from datetime import datetime
 from doctest import run_docstring_examples
@@ -9,7 +14,7 @@ from string import ascii_letters
 from ucb import main, trace, interact, log_current_line
 
 
-# Phase 1: The Feelings in Tweets
+# Phase 1: The Feelings in Tweets:
 
 def make_tweet(text, time, lat, lon):
     """Return a tweet, represented as a python dictionary.
@@ -32,7 +37,7 @@ def make_tweet(text, time, lat, lon):
 
 def tweet_words(tweet):
     """Return a list of the words in the text of a tweet."""
-    "*** YOUR CODE HERE ***"
+    # return extract_words(text)
 
 def tweet_time(tweet):
     """Return the datetime that represents when the tweet was posted."""
@@ -59,6 +64,10 @@ def extract_words(text):
     ['paperclips', 'they', 're', 'so', 'awesome', 'cool', 'useful']
     """
     "*** YOUR CODE HERE ***"
+    # for (not end)
+        # if not space
+        # extract word
+        # else skip space
     return text.split()  # Replace
 
 def make_sentiment(value):
@@ -171,7 +180,7 @@ def find_center(polygons):
     "*** YOUR CODE HERE ***"
 
 
-# Phase 3: The Mood of the Nation
+# Phase 3: The Mood of the Nation:
 
 def find_closest_state(tweet, state_centers):
     """Return the name of the state closest to the given tweet's location.
@@ -259,8 +268,8 @@ def group_tweets_by_hour(tweets):
     "*** YOUR CODE HERE ***"
     return tweets_by_hour
 
-
-# Interaction.  You don't need to read this section of the program.
+'
+# Interaction (You don't need to read this section of the program):
 
 def print_sentiment(text='Are you virtuous or verminous?'):
     """Print the words in text, annotated by their sentiment scores."""
