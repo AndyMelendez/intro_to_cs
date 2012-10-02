@@ -35,7 +35,7 @@ def make_tweet(text, time, lat, lon):
     38
     """
     return {'text': text, 'time': time, 'latitude': lat, 'longitude': lon}
-
+    
 def tweet_words(tweet):
     """Return a list of the words in the text of a tweet."""
     return extract_words(tweet['text'])
@@ -51,7 +51,7 @@ def tweet_location(tweet):
 def tweet_string(tweet):
     """Return a string representing the tweet."""
     return '"{0}" @ {1}'.format(tweet['text'], tweet_location(tweet))
-
+    
 def extract_words(text):
     """Return the words in a tweet, not including punctuation.
 
