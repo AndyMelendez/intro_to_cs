@@ -3,7 +3,6 @@
 # Class: CS61A
 # Date: 09-12-12
 
-
 # Preprogram Functions
 
 from dice import four_sided_dice, six_sided_dice, make_test_dice
@@ -11,7 +10,6 @@ from ucb import main, trace, log_current_line, interact
 
 goal = 100                 # The goal of Hog is to score 100 points.
 commentary = False  # Whether to display commentary for every roll.
-
 
 # Turn Taking Functions
 
@@ -25,16 +23,19 @@ def roll_dice(num_rolls, dice = six_sided_dice, who = 'Boss Hogg'):
 
     assert type(num_rolls) == int, 'num_rolls must be an integer.'
     assert num_rolls > 0, 'Must roll at least once.'
-    k, score1 = 1, 0
+    k, score_total = 1, 0
+    rolled_a_one = False
     while k <= num_rolls:
         outcome = dice()
         if commentary:
-            announce(outcome, who) #must remove this for the doctest to pass all tests!
+            announce(outcome, who)
         if outcome == 1:
-            return 1
+            rolled_a_one = True
         else:
-            score1, k = score1 + outcome, k+1
-    return score1
+            score_total, k = score_total + outcome, k + 1
+    if rolled_a_one == True:
+        return 1 
+    return score_total
 
 def take_turn(num_rolls, opponent_score, dice=six_sided_dice, who='Boss Hogg'):
     """Simulate a turn in which WHO chooses to roll NUM_ROLLS, perhaps 0.
@@ -50,18 +51,10 @@ def take_turn(num_rolls, opponent_score, dice=six_sided_dice, who='Boss Hogg'):
     
     if commentary:
         print(who, 'is going to roll', num_rolls, 'dice')
-    score2 = 0
-    
     if num_rolls == 0:
-        if opponent_score < 10:
-            score2 += 1
-            
-        else:
-            score2 = score2 + opponent_score//10 + 1
-            
+        return opponent_score//10 + 1    
     else:
-        score2 = roll_dice(num_rolls, dice)
-    return score2
+        return roll_dice(num_rolls, dice, who)
 
 def take_turn_test():
     # Test the roll_dice and take_turn functions using test dice.
@@ -70,26 +63,19 @@ def take_turn_test():
     
     dice = make_test_dice(4, 6, 1)
     assert roll_dice(2, dice) == 10, 'First two rolls total 10'
-
     dice = make_test_dice(4, 6, 1)
     assert roll_dice(3, dice) == 1, 'Third roll is a 1'
-
     dice = make_test_dice(1, 2, 3)
     assert roll_dice(3, dice) == 1, 'First roll is a 1'
-
     print('Testing Turn Taking Functions..')
-    
     dice = make_test_dice(4, 6, 1)
     assert take_turn(2, 0, dice) == 10, 'First two rolls total 10'
-
     dice = make_test_dice(4, 6, 1)
     assert take_turn(3, 20, dice) == 1, 'Third roll is a 1'
     assert take_turn(0, 34) == 4, 'Opponent score 10s digit is 3'
     assert take_turn(0, 71) == 8, 'Opponent score 10s digit is 7'
     assert take_turn(0,  7) == 1, 'Opponont score 10s digit is 0'
-
     print('Tests for roll_dice and take_turn passed.')
-
 
 
 # Commentator Functions
@@ -107,38 +93,19 @@ def draw_number(n, dot='*'):
     """
     
     if n == 1:
-        c = True
-        b, s, f = False, False, False
-        return draw_dice(c,f,b,s,dot)
-    
+        return draw_dice(True, False, False, False,dot)
     elif n == 2:
-        b = True
-        c, s, f = False, False, False
-        return draw_dice(c,f,b,s,dot)
-    
+        return draw_dice(False, False, True, False,dot)
     elif n == 3:
-        c,f = True, True
-        b, s = False, False
-        return draw_dice(c,f,b,s,dot)
-    
+        return draw_dice(True, True, False, False,dot)
     elif n == 4:
-        b, f = True, True
-        c, s = False, False
-        return draw_dice(c,f,b,s,dot)
-    
+        return draw_dice(False, True, True, False,dot)
     elif n == 5:
-        c, b, f = True, True, True
-        s = False
-        return draw_dice(c,f,b,s,dot)
-    
+        return draw_dice(True, True, True, False, dot)
     elif n == 6:
-        b, s, f = True, True, True
-        c = False
-        return draw_dice(c,f,b,s,dot)
-    
+        return draw_dice( False, True, True, True, dot)
     else:
-        b, s, f, c = False, False, False, False
-    return draw_dice(c,f,b,s,dot)
+       return draw_dice(False, False, False, False, dot) #For case in which invalid dice is passed
 
 def draw_dice(c, f, b, s, dot):
     """Return an ASCII art representation of a die roll\
@@ -157,7 +124,6 @@ def draw_dice(c, f, b, s, dot):
     return '\n'.join([border, top, middle, bottom, border])
 
 
-
 # Game Simulator Functions
 
 def num_allowed_dice(score, opponent_score):
@@ -166,7 +132,6 @@ def num_allowed_dice(score, opponent_score):
 
     if (score + opponent_score) % 10 == 7:
         return 1
-    
     else:
         return 10
 
@@ -175,13 +140,11 @@ def select_dice(score, opponent_score):
 
     if (score + opponent_score) % 7 == 0:
         return four_sided_dice
-    
     else:
         return six_sided_dice
 
 def other(who):
     # Return the other player, for players numbered 0 or 1.
-    
     return (who + 1) % 2
 
 def name(who):
@@ -189,10 +152,8 @@ def name(who):
     
     if who == 0:
         return 'Player 0'
-    
     elif who == 1:
         return 'Player 1'
-    
     else:
         return 'An Unknown Player'
 
@@ -209,28 +170,19 @@ def play(strategy0, strategy1):
     strategy1:  The strategy function for player 1, who plays second.
     """
     
-    score_zero = 0
-    score_one = 0
-    who = 0
-    
-    while score_zero < 100 and score_one < 100:
-        if who == 0:
-            score_zero= score_zero + take_turn(min(num_allowed_dice(score_zero, score_one), strategy0(score_zero, score_one)), score_one, select_dice(score_zero, score_one), name(0))
-            if commentary:
-                print('Player0 has', score_zero, 'point(s)')
-                
-        else:
-            score_one= score_one + take_turn(min(num_allowed_dice(score_one, score_zero), strategy1(score_one, score_zero)), score_zero, select_dice(score_one, score_zero), name(1))
-            if commentary:
-                print('Player1 has', score_one, 'point(s)')
-                
+    score, opp_score = 0, 0
+    strategy, opp_strategy = strategy0, strategy1
+
+    while score < goal and opp_score < goal:
+        score =  score +  take_turn(min(num_allowed_dice(score, opp_score), strategy(score, opp_score)), opp_score, select_dice(score, opp_score), name(who))
+        score, opp_score = opp_score, score
         who = other(who)
-        
-    if score_zero >= 100:
+        strategy, opp_strategy = opp_strategy, strategy
+
+    if score >= goal:
         return 0
     else:
         return 1
-
 
 
 # Basic Strategy Functions
@@ -251,7 +203,6 @@ def always_roll(n):
     return strategy
 
 
-
 # Experiment Functions (Phase 2)
 
 def make_average(fn, num_samples = 30000):
@@ -259,21 +210,17 @@ def make_average(fn, num_samples = 30000):
     
     def average(*args):
         counter, total = 0, 0
-        
         while counter < num_samples:
-            #print(k) List Counts
             counter, total = counter + 1, total + fn(*args)
-            
         return total / num_samples
-    
     return average
 
 def compare_strategies(strategy, baseline=always_roll(5)):
-    # Return the average win rate (out of 1) of STRATEGY against BASELINE."""
+    # Return the average win rate (out of 1) of STRATEGY against BASELINE.
     
     as_first = 1 - make_average(play)(strategy, baseline)
     as_second = make_average(play)(baseline, strategy)
-    return (as_first + as_second) / 2  # Average the two results
+    return (as_first + as_second) / 2  # average the two results
 
 def eval_strategy_range(make_strategy, lower_bound, upper_bound):
     """Return the best integer argument value for MAKE_STRATEGY to use against
@@ -291,10 +238,8 @@ def eval_strategy_range(make_strategy, lower_bound, upper_bound):
         strategy = make_strategy(value)
         win_rate = compare_strategies(strategy)
         print('Win rate against the baseline using', value, 'value:', win_rate)
-        
         if win_rate > best_win_rate:
             best_win_rate, best_value = win_rate, value
-            
         value += 1
     return best_value
 
@@ -304,7 +249,6 @@ def run_experiments():
     if True: # Change to True when ready to test make_comeback_strategy
         result = eval_strategy_range(make_comeback_strategy, 5, 6)
         print('Best comeback strategy:', result)
-
     if True: # Change to True when ready to test make_mean_strategy
         result = eval_strategy_range(make_mean_strategy, 1, 2)
         print('Best mean strategy:', result)
@@ -313,36 +257,24 @@ def run_experiments():
 
 # Developed Strategy Functions
 
-def make_comeback_strategy(margin, num_rolls=5):
+def make_comeback_strategy(margin, num_rolls = 5):
     #Return a strategy that rolls one extra time when losing by MARGIN.
-    
     def comeback(score, opponent_score):
-        temp_num_rolls = num_rolls
-        
         if opponent_score - score >= margin:
-            temp_num_rolls += 1
-        return temp_num_rolls
-    
+           return num_rolls + 1
+        return num_rolls
     return comeback
 
-def make_mean_strategy(min_points, num_rolls=5):
+def make_mean_strategy(min_points, num_rolls = 5):
     # Return a strategy that attempts to give the opponent problems.
     
     def mean(score, opponent_score):
         score_temp = 0
-        temp_num_rolls = num_rolls
-        
-        if opponent_score < 10 and 1 >= min_points:
-            score_temp = score + 1
-            if (score_temp + opponent_score)%10 == 7 or (score_temp + opponent_score)%7 == 0:
-                temp_num_rolls = 0
-                
-        elif opponent_score >= 10 and (opponent_score//10 + 1) >= min_points:
+        if (opponent_score//10 + 1) >= min_points:
             score_temp = score + opponent_score//10 + 1
-            if (score_temp + opponent_score)%10 == 7 or (score_temp + opponent_score)%7 == 0:
-                temp_num_rolls = 0
-                
-        return temp_num_rolls
+            if (score_temp + opponent_score) % 10 == 7 or (score_temp + opponent_score) % 7 == 0:
+                return 0
+        return num_rolls
     return mean
 
 
@@ -350,37 +282,25 @@ def final_strategy(score, opponent_score, num_rolls=5):
     # Take Advantage of Free Bacon and Probability (With a mix of Trial and Error) to Win!
     # Order of "IF" statements are important.
         
-    num_rolls = 0
     free_bacon = ((opponent_score // 10) + 1)
-    
-    if score + (free_bacon) >= 100:
-        num_rolls = 0 # Intial Free Bacon Strategy
-        
+    if score + (free_bacon) >= goal:
+        return 0 # Intial Free Bacon Strategy
     elif (free_bacon >= 5) and ((score + opponent_score) % 10 == 7): # Another Free Bacon Strategy 
-        num_rolls = 0
-        
+        return 0
     elif score >= goal - 3:
-        num_rolls = 1
-        
+        return 1
     elif score >= goal - 6:
-        num_rolls = 2
-        
+        return 2
     elif score >= goal - 9:
-        num_rolls = 3
-       
+        return 3
     elif (free_bacon) + 1 >= 4 and ((free_bacon) + score + opponent_score) % 10 == 7 or (free_bacon + score + opponent_score) % 7 == 0:
-        num_rolls = 0 # More Free Bacon Strategy 
-        
+        return 0 # More Free Bacon Strategy   
     elif score > opponent_score + 40:
-        num_rolls = 4
-        
+        return 4 
     elif score < opponent_score - 20:
-        num_rolls = 6
-    
+        return 6
     else:
-        num_rolls = 5 # Default Number of Rolls
-        
-    return num_rolls
+        return 5 # Default Number of Rolls
 
 
 def final_strategy_test():

@@ -67,7 +67,7 @@ def extract_words(text):
     for obj in text:
     	if obj not in ascii_letters:
     		text = text.replace(obj, ' ')
-    return text.split() #replace
+    return text.split() # replace
 
 def make_sentiment(value):
     """Return a sentiment, which represents a value that may not exist.
@@ -127,7 +127,17 @@ def analyze_tweet_sentiment(tweet):
     False
     """
     average = make_sentiment(None)
-    "*** YOUR CODE HERE ***"
+    total_sentiment_val, count = 0, 0
+    words = tweet_words(tweet)
+    for word in words:
+    	temp_sentiment = get_word_sentiment(word)
+    	if has_sentiment(temp_sentiment):
+    		total_sentiment_val += sentiment_value(temp_sentiment)
+    		count += 1
+    if total_sentiment_val == 0:
+    	return make_sentiment(None)
+    else:
+    	return make_sentiment(total_sentiment_val / count)
     return average
 
 
