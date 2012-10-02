@@ -126,18 +126,19 @@ def analyze_tweet_sentiment(tweet):
     >>> has_sentiment(analyze_tweet_sentiment(no_sentiment))
     False
     """
+    counter, tot_sent_val = 0, 0
     average = make_sentiment(None)
-    total_sentiment_val, count = 0, 0
-    words = tweet_words(tweet)
-    for word in words:
-    	temp_sentiment = get_word_sentiment(word)
-    	if has_sentiment(temp_sentiment):
-    		total_sentiment_val += sentiment_value(temp_sentiment)
-    		count += 1
-    if total_sentiment_val == 0:
-    	return make_sentiment(None)
+    words_in_tweet = tweet_words(tweet)
+
+    for word in words_in_tweet:
+        if has_sentiment(get_word_sentiment(word)):
+            tot_sent_val += sentiment_value(get_word_sentiment(word))
+            counter += 1
+
+    if counter == 0:
+        average = make_sentiment(None)
     else:
-    	return make_sentiment(total_sentiment_val / count)
+        average = make_sentiment(tot_sent_val / counter)
     return average
 
 
@@ -146,7 +147,7 @@ def analyze_tweet_sentiment(tweet):
 def find_centroid(polygon):
     """Find the centroid of a polygon.
 
-    http://en.wikipedia.org/wiki/Centroid#Centroid_of_polygon
+    http://en.wikipedia.org/wiki/Centroid #Centroid_of_polygon
 
     polygon -- A list of positions, in which the first and last are the same
 
