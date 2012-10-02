@@ -3,6 +3,7 @@
 # Class: CS61A
 # Date: 10/03/12
 	
+	
 # Preprocesessor Stuff:
 	
 from data import word_sentiments, load_tweets
@@ -37,15 +38,15 @@ def make_tweet(text, time, lat, lon):
 
 def tweet_words(tweet):
     """Return a list of the words in the text of a tweet."""
-    #return extract_words()
+    return extract_words(tweet['text'])
 
 def tweet_time(tweet):
     """Return the datetime that represents when the tweet was posted."""
-    #return datetime(extract_words())
+    return tweet['time']
 
 def tweet_location(tweet):
     """Return a position (see geo.py) that represents the tweet's location."""
-    #return make_position(lat, lon)
+    return make_position(tweet['latitude'], tweet['longitude'])
 
 def tweet_string(tweet):
     """Return a string representing the tweet."""
@@ -63,12 +64,10 @@ def extract_words(text):
     >>> extract_words("paperclips! they're so awesome, cool, & useful!")
     ['paperclips', 'they', 're', 'so', 'awesome', 'cool', 'useful']
     """
-    "*** YOUR CODE HERE ***"
-    # for (not end)
-        # if not space
-        # extract word
-        # else skip space
-    return text.split()  # Replace
+    for obj in text:
+    	if obj not in ascii_letters:
+    		text = text.replace(obj, ' ')
+    return text.split() #replace
 
 def make_sentiment(value):
     """Return a sentiment, which represents a value that may not exist.
@@ -83,16 +82,16 @@ def make_sentiment(value):
     0.2
     """
     assert value is None or (value >= -1 and value <= 1), 'Illegal value'
-    "*** YOUR CODE HERE ***"
+    return value
 
 def has_sentiment(s):
     """Return whether sentiment s has a value."""
-    "*** YOUR CODE HERE ***"
+    return s != None
 
 def sentiment_value(s):
     """Return the value of a sentiment s."""
     assert has_sentiment(s), 'No sentiment value'
-    "*** YOUR CODE HERE ***"
+    return s
 
 def get_word_sentiment(word):
     """Return a sentiment representing the degree of positive or negative
