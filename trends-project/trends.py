@@ -1,5 +1,5 @@
 # Project: Trends: Visualizing Twitter Sentiment Across America
-# Author: Krishna Parashar
+# Authors: Krishna Parashar & Andrea Melendez
 # Class: CS61A
 # Date: 10/03/12
 	
