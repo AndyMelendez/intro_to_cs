@@ -164,7 +164,21 @@ def find_centroid(polygon):
     >>> find_centroid([p1, p2, p1])
     (1, 2, 0)
     """
-    "*** YOUR CODE HERE ***"
+    x, y, A = 0, 0, 0
+    
+    for i in range(0, len(polygon) - 1):
+        constant_formula = ((latitude(polygon[i]) * longitude(polygon[i + 1])) - (latitude(polygon[i + 1]) * longitude(polygon[i]))) # constant formula in x, y, A
+        x += ((latitude(polygon[i]) + latitude(polygon[i + 1])) * constant_formula)
+        y += ((longitude(polygon[i]) + longitude(polygon[i + 1])) * constant_formula)
+        A += (constant_formula)
+        
+    if A != 0:
+        A = (A / 2)
+        x, y = (x / (6 * A)), (y / (6 * A))
+        A = abs(A)
+    if A == 0:
+        x, y = (latitude(polygon[0])), (longitude(polygon[0]))
+    return (x, y, A)
 
 def find_center(polygons):
     """Compute the geographic center of a state, averaged over its polygons.
@@ -187,7 +201,16 @@ def find_center(polygons):
     >>> round(longitude(hi), 5)
     -156.21763
     """
-    "*** YOUR CODE HERE ***"
+    centroid_x, centroid_y, area = 0, 0, 0
+    for i in polygons:
+        centroid_i_x, centroid_i_y, area_i = find_centroid(i)
+        centroid_x += (centroid_i_x * area_i)
+        centroid_y += (centroid_i_y * area_i)
+        area += (area_i)
+    average_latitude = ((centroid_x) / (area))
+    average_longtitude = ((centroid_y) / (area))
+    return make_position(average_latitude, average_longtitude)
+
 
 
 # Phase 3: The Mood of the Nation:
