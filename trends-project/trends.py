@@ -255,13 +255,13 @@ def group_tweets_by_state(tweets):
     '"Welcome to San Francisco" @ (38, -122)'
     """
     tweets_by_state = {}
-    # state_centers = ________ should we initialize this to something?
+    state_centers = {n: find_center(s) for n, s in us_states.items()} # Creates state centers dictionary
     for tweet in tweets:
-        closest_state = find_closest_state(tweet, state_centers) # Find closest state from tweet
+        closest_state = find_closest_state(tweet, state_centers) # Finds closest state from tweet
         if closest_state in tweets_by_state:
-            tweets_by_state[closest_state].append(tweet)
+            tweets_by_state[closest_state].append(tweet) # Appends tweet to dictionary
         else:
-            tweets_by_state.update({closest_state : [tweet]})
+            tweets_by_state.update({closest_state : [tweet]}) # Add tweet to value
     return tweets_by_state
 
 def most_talkative_state(term):
@@ -274,7 +274,7 @@ def most_talkative_state(term):
     """
     tweets = load_tweets(make_tweet, term)  # A list of tweets containing term
     grouped_tweets = group_tweets_by_state(tweets)
-    # talks_the_most = _
+    frequency = {}
     # for state in grouped_tweets:
         # something
     # return _____
@@ -294,7 +294,7 @@ def average_sentiments(tweets_by_state):
     """
     averaged_state_sentiments = {}
     # inisitalize counter, total sentiment,
-    for tweets in tweets_by_state:
+#for tweets in tweets_by_state:
         # for tweet in _________
             # if has_sentiment(______)
                 #increase count of sentiment
