@@ -129,12 +129,10 @@ def analyze_tweet_sentiment(tweet):
     counter, tot_sent_val = 0, 0
     average = make_sentiment(None)
     words_in_tweet = tweet_words(tweet)
-
     for word in words_in_tweet:
         if has_sentiment(get_word_sentiment(word)):
             tot_sent_val += sentiment_value(get_word_sentiment(word))
             counter += 1
-
     if counter == 0:
         average = make_sentiment(None)
     else:
@@ -167,7 +165,8 @@ def find_centroid(polygon):
     centroid_x, centroid_y, area = 0, 0, 0
     
     for i in range(0, len(polygon) - 1):
-        constant_formula = ((latitude(polygon[i]) * longitude(polygon[i + 1])) - (latitude(polygon[i + 1]) * longitude(polygon[i]))) # Constant formula in centroid_x, centroid_y, and area
+        constant_formula = ((latitude(polygon[i]) * longitude(polygon[i + 1])) - (latitude(polygon[i + 1]) * longitude(polygon[i])))
+        # Constant formula in centroid_x, centroid_y, and area
         centroid_x += ((latitude(polygon[i]) + latitude(polygon[i + 1])) * constant_formula)
         centroid_y += ((longitude(polygon[i]) + longitude(polygon[i + 1])) * constant_formula)
         area += (constant_formula)
@@ -233,7 +232,7 @@ def find_closest_state(tweet, state_centers):
     >>> find_closest_state(ny, us_centers)
     'NJ'
     """
-    minimum_distance, closest_state = 6000 , None # 6000 is distance from Maine to Hawaii
+    minimum_distance, closest_state = 6000 , None #6000 is distance from Maine to Hawaii
     for state in state_centers:
         distance = geo_distance(tweet_location(tweet), state_centers[state])
         if distance < minimum_distance:
@@ -256,12 +255,13 @@ def group_tweets_by_state(tweets):
     '"Welcome to San Francisco" @ (38, -122)'
     """
     tweets_by_state = {}
-    for ___ in tweets:
+    # state_centers = ________ should we initialize this to something?
+    for tweet in tweets:
         closest_state = find_closest_state(tweet, state_centers) # Find closest state from tweet
         if closest_state in tweets_by_state:
             tweets_by_state[closest_state].append(tweet)
         else:
-            # add to state
+            tweets_by_state.update({closest_state : [tweet]})
     return tweets_by_state
 
 def most_talkative_state(term):
@@ -273,7 +273,12 @@ def most_talkative_state(term):
     'NJ'
     """
     tweets = load_tweets(make_tweet, term)  # A list of tweets containing term
-    "*** YOUR CODE HERE ***"
+    grouped_tweets = group_tweets_by_state(tweets)
+    # talks_the_most = _
+    # for state in grouped_tweets:
+        # something
+    # return _____
+
 
 def average_sentiments(tweets_by_state):
     """Calculate the average sentiment of the states by averaging over all
@@ -288,7 +293,12 @@ def average_sentiments(tweets_by_state):
     tweets_by_state -- A dictionary from state names to lists of tweets
     """
     averaged_state_sentiments = {}
-    "*** YOUR CODE HERE ***"
+    # inisitalize counter, total sentiment,
+    for tweets in tweets_by_state:
+        # for tweet in _________
+            # if has_sentiment(______)
+                #increase count of sentiment
+                #increase counter
     return averaged_state_sentiments
 
 
@@ -309,7 +319,11 @@ def group_tweets_by_hour(tweets):
     tweets -- A list of tweets to be grouped
     """
     tweets_by_hour = {}
-    "*** YOUR CODE HERE ***"
+    #for ____ in ____:
+        # if sometime is in the time of tweet
+            # add it
+        # else:
+            # throw it out?
     return tweets_by_hour
 
 
