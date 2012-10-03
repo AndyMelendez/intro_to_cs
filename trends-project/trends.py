@@ -65,9 +65,9 @@ def extract_words(text):
     ['paperclips', 'they', 're', 'so', 'awesome', 'cool', 'useful']
     """
     for obj in text:
-    	if obj not in ascii_letters:
-    		text = text.replace(obj, ' ')
-    return text.split() # replace
+    	if obj not in ascii_letters: # If object is not an ASCII
+    		text = text.replace(obj, ' ') # Replace unwanted object with blank
+    return text.split() # Seperates objects with space
 
 def make_sentiment(value):
     """Return a sentiment, which represents a value that may not exist.
@@ -164,21 +164,21 @@ def find_centroid(polygon):
     >>> find_centroid([p1, p2, p1])
     (1, 2, 0)
     """
-    x, y, A = 0, 0, 0
+    centroid_x, centroid_y, area = 0, 0, 0
     
     for i in range(0, len(polygon) - 1):
-        constant_formula = ((latitude(polygon[i]) * longitude(polygon[i + 1])) - (latitude(polygon[i + 1]) * longitude(polygon[i]))) # constant formula in x, y, A
-        x += ((latitude(polygon[i]) + latitude(polygon[i + 1])) * constant_formula)
-        y += ((longitude(polygon[i]) + longitude(polygon[i + 1])) * constant_formula)
-        A += (constant_formula)
-        
-    if A != 0:
-        A = (A / 2)
-        x, y = (x / (6 * A)), (y / (6 * A))
-        A = abs(A)
-    if A == 0:
-        x, y = (latitude(polygon[0])), (longitude(polygon[0]))
-    return (x, y, A)
+        constant_formula = ((latitude(polygon[i]) * longitude(polygon[i + 1])) - (latitude(polygon[i + 1]) * longitude(polygon[i]))) # Constant formula in centroid_x, centroid_y, and area
+        centroid_x += ((latitude(polygon[i]) + latitude(polygon[i + 1])) * constant_formula)
+        centroid_y += ((longitude(polygon[i]) + longitude(polygon[i + 1])) * constant_formula)
+        area += (constant_formula)
+    if area != 0:
+        area = (area / 2)
+        centroid_x, centroid_y = (centroid_x / (6 * area)), (centroid_y/ (6 * area))
+        area = abs(area)
+    if area == 0:
+        centroid_x, centroid_y = (latitude(polygon[0])), (longitude(polygon[0]))
+    
+    return (centroid_x, centroid_y, area)
 
 def find_center(polygons):
     """Compute the geographic center of a state, averaged over its polygons.
@@ -233,7 +233,13 @@ def find_closest_state(tweet, state_centers):
     >>> find_closest_state(ny, us_centers)
     'NJ'
     """
-    "*** YOUR CODE HERE ***"
+    minimum_distance, closest_state = 6000 , None # 6000 is distance from Maine to Hawaii
+    for state in state_centers:
+        distance = geo_distance(tweet_location(tweet), state_centers[state])
+        if distance < minimum_distance:
+            minimum_distance = distance
+            closest_state = state
+    return closest_state
 
 def group_tweets_by_state(tweets):
     """Return a dictionary that aggregates tweets by their nearest state center.
@@ -250,7 +256,12 @@ def group_tweets_by_state(tweets):
     '"Welcome to San Francisco" @ (38, -122)'
     """
     tweets_by_state = {}
-    "*** YOUR CODE HERE ***"
+    for ___ in tweets:
+        closest_state = find_closest_state(tweet, state_centers) # Find closest state from tweet
+        if closest_state in tweets_by_state:
+            tweets_by_state[closest_state].append(tweet)
+        else:
+            # add to state
     return tweets_by_state
 
 def most_talkative_state(term):
