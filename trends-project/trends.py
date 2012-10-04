@@ -1,6 +1,8 @@
 # Project: Trends: Visualizing Twitter Sentiment Across America
 # Authors: Krishna Parashar & Andrea Melendez
 # Class: CS61A
+# Section: 11
+# TA: Julia Oh
 # Date: 10/03/12
 	
 	
@@ -126,17 +128,17 @@ def analyze_tweet_sentiment(tweet):
     >>> has_sentiment(analyze_tweet_sentiment(no_sentiment))
     False
     """
-    counter, tot_sent_val = 0, 0
+    counter, total_sentiment_value = 0, 0
     average = make_sentiment(None)
     words_in_tweet = tweet_words(tweet)
     for word in words_in_tweet:
         if has_sentiment(get_word_sentiment(word)):
-            tot_sent_val += sentiment_value(get_word_sentiment(word))
+            total_sentiment_value += sentiment_value(get_word_sentiment(word))
             counter += 1
     if counter == 0:
         average = make_sentiment(None)
     else:
-        average = make_sentiment(tot_sent_val / counter)
+        average = make_sentiment(total_sentiment_value / counter)
     return average
 
 
@@ -172,7 +174,7 @@ def find_centroid(polygon):
         area += (constant_formula)
     if area != 0:
         area = (area / 2)
-        centroid_x, centroid_y = (centroid_x / (6 * area)), (centroid_y/ (6 * area))
+        centroid_x, centroid_y = (centroid_x / (6 * area)), (centroid_y / (6 * area))
         area = abs(area)
     if area == 0:
         centroid_x, centroid_y = (latitude(polygon[0])), (longitude(polygon[0]))
@@ -236,6 +238,7 @@ def find_closest_state(tweet, state_centers):
     for state in state_centers:
         distance = geo_distance(tweet_location(tweet), state_centers[state])
         if distance < minimum_distance:
+            # Make distance smaller to narrow range of states
             minimum_distance = distance
             closest_state = state
     return closest_state
@@ -274,13 +277,13 @@ def most_talkative_state(term):
     """
     tweets = load_tweets(make_tweet, term)  # A list of tweets containing term
     grouped_tweets = group_tweets_by_state(tweets)
-    number_of_tweets = 0
-    frequency_of_tweets = {}
+    number_of_tweets = 0     # Initial tweet count
+    frequency_of_tweets = {} # Dictionary with key: state & value: # of tweets
     for state in grouped_tweets:
         frequency = len(grouped_tweets[state])
         if frequency > number_of_tweets:
             number_of_tweets = frequency
-            most_voluble_state = state
+            most_voluble_state = state # State that talks the most
     return most_voluble_state
 
 
@@ -299,15 +302,15 @@ def average_sentiments(tweets_by_state):
     averaged_state_sentiments = {}
 
     for state in tweets_by_state:
-        counter, total_sentiment = 0, 0
+        counter, total_sentiment = 1, 0
         list_of_tweets = tweets_by_state[state]
         for tweet in list_of_tweets:
             tweet_sentiment = analyze_tweet_sentiment(tweet)
             if has_sentiment(tweet_sentiment):
-                total_sentiment += tweet_sentiment #increase count of sentiment
-                counter += 1 #increase counter
+                total_sentiment += tweet_sentiment # Increase count of sentiment
+                counter += 1                       # Increase counter
             if sentiment_value != 0: # Ensures sentiment value of zero is ignored
-                    averaged_state_sentiments[state] = ((total_sentiment)/(counter))
+                averaged_state_sentiments[state] = ((total_sentiment)/(counter))
     return averaged_state_sentiments
 
 
@@ -330,11 +333,13 @@ def group_tweets_by_hour(tweets):
     """
     tweets_by_hour = {}
     for tweet in tweets:
-        # put tweet times in list
-        if #tweetime in tweets_by_hour:
-            tweets_by_hour = 
-        # else:
-            # throw it out?
+        hour_of_tweet = tweet_time(tweet).hour
+        if hour_of_tweet not in tweets_by_hour:
+            # If the hour is not in dictionary, add that hour and pair it with value tweet
+            tweets_by_hour[hour_of_tweet] = [tweet]
+        else:
+            # Append tweet to key hour_of_tweet
+            tweets_by_hour[hour_of_tweet].append(tweet)
     return tweets_by_hour
 
 
@@ -349,15 +354,7 @@ def print_sentiment(text = 'Are you virtuous or verminous?'):
         s = get_word_sentiment(word)
         if has_sentiment(s):
             print(layout.format(word, sentiment_value(s)))
-"""
-    for tweet in tweets:
-    tweet_hour = tweet_time(tweet).hour
-    if tweet_hour not in tweets_by_hour:
-    tweets_by_hour[tweet_hour] = [tweet]
-    else:
-    tweets_by_hour[tweet_hour].append(tweet)
-    return tweets_by_hour
-"""
+
 def draw_centered_map(center_state='TX', n=10):
     """Draw the n states closest to center_state."""
     us_centers = {n: find_center(s) for n, s in us_states.items()}
