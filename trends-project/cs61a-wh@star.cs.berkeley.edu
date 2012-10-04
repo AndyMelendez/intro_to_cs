@@ -274,14 +274,10 @@ def most_talkative_state(term):
     """
     tweets = load_tweets(make_tweet, term)  # A list of tweets containing term
     grouped_tweets = group_tweets_by_state(tweets)
-    number_of_tweets = 0
-    frequency_of_tweets = {}
-    for state in grouped_tweets:
-        frequency = len(grouped_tweets[state])
-        if frequency > number_of_tweets:
-            number_of_tweets = frequency
-            most_voluble_state = state
-    return most_voluble_state
+    frequency = {}
+    # for state in grouped_tweets:
+        # something
+    # return _____
 
 
 def average_sentiments(tweets_by_state):
