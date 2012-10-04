@@ -297,13 +297,19 @@ def average_sentiments(tweets_by_state):
     tweets_by_state -- A dictionary from state names to lists of tweets
     """
     averaged_state_sentiments = {}
-    # inisitalize counter, total sentiment,
-#for tweets in tweets_by_state:
-        # for tweet in _________
-            # if has_sentiment(______)
-                #increase count of sentiment
-                #increase counter
+
+    for state in tweets_by_state:
+        counter, total_sentiment = 0, 0
+        list_of_tweets = tweets_by_state[state]
+        for tweet in list_of_tweets:
+            tweet_sentiment = analyze_tweet_sentiment(tweet)
+            if has_sentiment(tweet_sentiment):
+                total_sentiment += tweet_sentiment #increase count of sentiment
+                counter += 1 #increase counter
+            if sentiment_value != 0: # Ensures sentiment value of zero is ignored
+                    averaged_state_sentiments[state] = ((total_sentiment)/(counter))
     return averaged_state_sentiments
+
 
 
 # Phase 4: Into the Fourth Dimension
@@ -323,9 +329,10 @@ def group_tweets_by_hour(tweets):
     tweets -- A list of tweets to be grouped
     """
     tweets_by_hour = {}
-    #for ____ in ____:
-        # if sometime is in the time of tweet
-            # add it
+    for tweet in tweets:
+        # put tweet times in list
+        if #tweetime in tweets_by_hour:
+            tweets_by_hour = 
         # else:
             # throw it out?
     return tweets_by_hour
@@ -333,7 +340,7 @@ def group_tweets_by_hour(tweets):
 
 # Interaction (You don't need to read this section of the program):
 
-def print_sentiment(text='Are you virtuous or verminous?'):
+def print_sentiment(text = 'Are you virtuous or verminous?'):
     """Print the words in text, annotated by their sentiment scores."""
     words = extract_words(text.lower())
     assert words, 'No words extracted from "' + text + '"'
@@ -342,7 +349,15 @@ def print_sentiment(text='Are you virtuous or verminous?'):
         s = get_word_sentiment(word)
         if has_sentiment(s):
             print(layout.format(word, sentiment_value(s)))
-
+"""
+    for tweet in tweets:
+    tweet_hour = tweet_time(tweet).hour
+    if tweet_hour not in tweets_by_hour:
+    tweets_by_hour[tweet_hour] = [tweet]
+    else:
+    tweets_by_hour[tweet_hour].append(tweet)
+    return tweets_by_hour
+"""
 def draw_centered_map(center_state='TX', n=10):
     """Draw the n states closest to center_state."""
     us_centers = {n: find_center(s) for n, s in us_states.items()}

@@ -274,10 +274,14 @@ def most_talkative_state(term):
     """
     tweets = load_tweets(make_tweet, term)  # A list of tweets containing term
     grouped_tweets = group_tweets_by_state(tweets)
-    frequency = {}
-    # for state in grouped_tweets:
-        # something
-    # return _____
+    number_of_tweets = 0
+    frequency_of_tweets = {}
+    for state in grouped_tweets:
+        frequency = len(grouped_tweets[state])
+        if frequency > number_of_tweets:
+            number_of_tweets = frequency
+            most_voluble_state = state
+    return most_voluble_state
 
 
 def average_sentiments(tweets_by_state):
@@ -293,15 +297,37 @@ def average_sentiments(tweets_by_state):
     tweets_by_state -- A dictionary from state names to lists of tweets
     """
     averaged_state_sentiments = {}
-    # inisitalize counter, total sentiment,
-#for tweets in tweets_by_state:
-        # for tweet in _________
-            # if has_sentiment(______)
-                #increase count of sentiment
-                #increase counter
+
+    for state in tweets_by_state:
+        counter, total_sentiment = 0, 0
+        list_of_tweets = tweets_by_state[state]
+        for tweet in list_of_tweets:
+            tweet_sentiment = analyze_tweet_sentiment(tweet)
+            if has_sentiment(tweet_sentiment):
+                total_sentiment += tweet_sentiment #increase count of sentiment
+                counter += 1 #increase counter
+                if sentiment_value != 0:
+                    averaged_state_sentiments[state] = ((total_sentiment)/(counter))
     return averaged_state_sentiments
 
 
+
+
+
+"""
+ 
+        averaged_state_sentiments = {}
+        for state in tweets_by_state:
+            tweet_list, total_sentiment, count = tweets_by_state[state], 0, 0
+            for tweet in tweet_list:
+                tweet_sentiment = analyze_tweet_sentiment(tweet)
+                if has_sentiment(tweet_sentiment):
+                    total_sentiment += tweet_sentiment
+                    count += 1
+            if count != 0:
+                averaged_state_sentiments[state] = total_sentiment / count
+        return averaged_state_sentiments
+"""
 # Phase 4: Into the Fourth Dimension
 
 def group_tweets_by_hour(tweets):
