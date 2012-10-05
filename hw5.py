@@ -1,8 +1,8 @@
 """61A Homework 5
-Name:
-Login:
-TA:
-Section:
+Name: Krishna Parashar
+Login: cs61a-wh
+TA: Julia Oh
+Section: 11
 """
 
 # Q1.
@@ -29,7 +29,22 @@ def count_calls(f):
     >>> add_count()
     2
     """
-    "*** YOUR CODE HERE ***"
+    value, total = None, 0
+    def counted_add(num1, num2):
+        nonlocal value
+        value = f(num1, num2)
+        return value
+    
+    def add_count():
+        nonlocal value, total
+        if  value is None:
+            total = total
+        else:
+            total += 1
+            value = None
+        return total
+    return counted_add, add_count
+
 
 # Q2.
 
@@ -56,7 +71,23 @@ def make_withdraw(balance, password):
     >>> w(10, 'l33t')
     "Your account is locked. Attempts: ['hwat', 'a', 'n00b']"
     """
-    "*** YOUR CODE HERE ***"
+    attempts = []
+    def withdraw(withdrawal, attempted_password):
+        nonlocal balance, attempts
+        if password == attempted_password and len(attempts) < 3:
+            if balance >= withdrawal:
+                balance -= withdrawal
+                return balance
+            else:
+                print('Insufficient funds')
+        else:
+            attempts += [attempted_password]
+            if len(attempts) <= 3:
+                print('Incorrect password')
+            else:
+                print('Your account is locked. Attempts:', attempts[:3])
+    return withdraw
+
 
 # Q3.
 

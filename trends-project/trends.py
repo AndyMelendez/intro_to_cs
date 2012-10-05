@@ -302,14 +302,14 @@ def average_sentiments(tweets_by_state):
     averaged_state_sentiments = {}
 
     for state in tweets_by_state:
-        counter, total_sentiment = 1, 0
+        counter, total_sentiment = 0, 0
         list_of_tweets = tweets_by_state[state]
         for tweet in list_of_tweets:
             tweet_sentiment = analyze_tweet_sentiment(tweet)
             if has_sentiment(tweet_sentiment):
                 total_sentiment += tweet_sentiment # Increase count of sentiment
                 counter += 1                       # Increase counter
-            if sentiment_value != 0: # Ensures sentiment value of zero is ignored
+            if counter != 0: # Ensures that there is no division by 0
                 averaged_state_sentiments[state] = ((total_sentiment)/(counter))
     return averaged_state_sentiments
 
