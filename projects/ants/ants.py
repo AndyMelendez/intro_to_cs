@@ -1,10 +1,14 @@
-"""
-The ants module implements game logic for Ants Vs. SomeBees.
-Name:
-Login:
-TA:
-Section:
-"""
+# Project: Ants
+# Authors: Krishna Parashar & Andrea Melendez
+# Login: cs61a-wh $ cs61a-awz
+# TA: Julia Oh
+# Section: 11
+# Description: Implements game logic for Ants Vs. SomeBees.
+
+
+######################
+# Preprocessor Stuff #
+######################
 
 import random
 import sys
