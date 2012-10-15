@@ -1,6 +1,6 @@
 # Project: Ants
 # Authors: Krishna Parashar & Andrea Melendez
-# Login: cs61a-wh $ cs61a-awz
+# Login: cs61a-wh & cs61a-awz
 # TA: Julia Oh
 # Section: 11
 # Description: Implements game logic for Ants Vs. SomeBees.
@@ -24,7 +24,7 @@ from collections import OrderedDict
 class Place(object):
     """A Place holds insects and has an exit to another Place."""
 
-    def __init__(self, name, exit=None):
+    def __init__(self, name, exit = None):
         """Create a Place with the given exit.
 
         name -- A string; the name of this Place.
@@ -32,11 +32,12 @@ class Place(object):
         """
         self.name = name
         self.exit = exit
-        self.bees = []        # A list of Bees
+        self.bees = []        # A List of Bees
         self.ant = None       # An Ant
         self.entrance = None  # A Place
-        # Phase 1: Add an entrance to the exit
-        "*** YOUR CODE HERE ***"
+        self.exit = exit      # An Exit
+        if exit != None:
+            self.exit.entrance = self
 
     def add_insect(self, insect):
         """Add an Insect to this Place.
@@ -64,7 +65,6 @@ class Place(object):
             assert self.ant == insect, '{0} is not in {1}'.format(insect, self)
             "*** YOUR CODE HERE ***"
             self.ant = None
-
         insect.place = None
 
     def __str__(self):
@@ -74,6 +74,8 @@ class Place(object):
 class Insect(object):
     """An Insect, the base class of Ant and Bee, has armor and a Place."""
 
+    watersafe = False # Insect is not watersafe by default
+    
     def __init__(self, armor, place=None):
         """Create an Insect with an armor amount and a starting Place."""
         self.armor = armor
@@ -113,6 +115,7 @@ class Bee(Insect):
     """A Bee moves from place to place, following exits and stinging ants."""
 
     name = 'Bee'
+    watersafe = True
 
     def sting(self, ant):
         """Attack an Ant, reducing the Ant's armor by 1."""
@@ -125,9 +128,7 @@ class Bee(Insect):
 
     def blocked(self):
         """Return True if this Bee cannot advance to the next Place."""
-        # Phase 2: Special handling for NinjaAnt
-        "*** YOUR CODE HERE ***"
-        return self.place.ant is not None
+        return not (self.place.ant is None or not self.place.ant.blocks_path)
 
     def action(self, colony):
         """A Bee's action stings the Ant that blocks its exit if it is blocked,
@@ -148,6 +149,7 @@ class Ant(Insect):
     implemented = False  # Only implemented Ant classes should be instantiated
     damage = 0
     food_cost = 0
+    blocks_path = True
 
     def __init__(self, armor=1):
         """Create an Ant with an armor quantity."""
@@ -161,6 +163,7 @@ class HarvesterAnt(Ant):
     """HarvesterAnt produces 1 additional food per turn for the colony."""
 
     name = 'Harvester'
+    food_cost = 2
     implemented = True
 
     def action(self, colony):
@@ -168,7 +171,8 @@ class HarvesterAnt(Ant):
 
         colony -- The AntColony, used to access game state information.
         """
-        "*** YOUR CODE HERE ***"
+        colony.food += 1
+
 
 def random_or_none(l):
     """Return a random element of list l, or return None if l is empty."""
@@ -180,6 +184,7 @@ class ThrowerAnt(Ant):
 
     name = 'Thrower'
     implemented = True
+    food_cost = 4
     damage = 1
 
     def nearest_bee(self, hive):
@@ -238,7 +243,7 @@ class AntColony(object):
     places -- A list of all places in the colony (including a Hive)
     bee_entrances -- A list of places that bees can enter
     """
-    def __init__(self, strategy, hive, ant_types, create_places, food=4):
+    def __init__(self, strategy, hive, ant_types, create_places, food = 4):
         """Create an AntColony for simulating a game.
 
         Arguments:
@@ -388,7 +393,6 @@ def dry_layout(queen, register_place, length=8, tunnels=3):
 # Assault Plans #
 #################
 
-
 class AssaultPlan(dict):
     """The Bees' plan of attack for the Colony.  Attacks come in timed waves.
 
@@ -398,7 +402,7 @@ class AssaultPlan(dict):
     {4: [Bee(3, None), Bee(3, None)]}
     """
 
-    def __init__(self, bee_armor=3):
+    def __init__(self, bee_armor = 3):
         self.bee_armor = bee_armor
 
     def add_wave(self, time, count):
@@ -433,13 +437,14 @@ def make_insane_assault_plan():
 # Extensions #
 ##############
 
-
 class Water(Place):
     """Water is a place that can only hold 'watersafe' insects."""
 
     def add_insect(self, insect):
         """Add insect if it is watersafe, otherwise reduce its armor to 0."""
-        "*** YOUR CODE HERE ***"
+        Place.add_insect(self, insect)
+        if not insect.watersafe:
+            insect.reduce_armor(insect.armor)
 
 
 class FireAnt(Ant):
@@ -447,11 +452,16 @@ class FireAnt(Ant):
 
     name = 'Fire'
     damage = 3
-    "*** YOUR CODE HERE ***"
-    implemented = False
+    food_cost = 4
+    armor = 1
+    implemented = True
 
     def reduce_armor(self, amount):
-        "*** YOUR CODE HERE ***"
+        place = self.place # Keeps track of place so bee can be damaged when ant dies
+        Insect.reduce_armor(self, amount)
+        if self.armor <= 0:
+            for bee in place.bees[:]:
+                bee.reduce_armor(self.damage)
 
 
 class LongThrower(ThrowerAnt):
@@ -474,12 +484,18 @@ class WallAnt(Ant):
     """WallAnt is an Ant which has a large amount of armor."""
 
     name = 'Wall'
-    "*** YOUR CODE HERE ***"
-    implemented = False
+    food_cost = 4
+    armor = 4
+    implemented = True
 
+    ######################
+    # WHAT DOES THIS DO? #
+    ######################
+    """
     def __init__(self):
         "*** YOUR CODE HERE ***"
         Ant.__init__(self)
+    """
 
 
 class NinjaAnt(Ant):
@@ -487,19 +503,25 @@ class NinjaAnt(Ant):
     all Bees in the exact same Place."""
 
     name = 'Ninja'
-    "*** YOUR CODE HERE ***"
-    implemented = False
+    food_cost = 6
+    armor = 1
+    blocks_path = False
+    implemented = True
 
     def action(self, colony):
-        "*** YOUR CODE HERE ***"
+        bees_list = self.place.bees
+        for bee in bees_list[:]:
+        	bee.reduce_armor(1)
 
 
 class ScubaThrower(ThrowerAnt):
     """ScubaThrower is a ThrowerAnt which is watersafe."""
 
     name = 'Scuba'
-    "*** YOUR CODE HERE ***"
-    implemented = False
+    food_cost = 5
+    armor = 1
+    watersafe = True
+    implemented = True
 
 
 class HungryAnt(Ant):
