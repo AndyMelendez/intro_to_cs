@@ -159,54 +159,9 @@ class Ant(Insect):
         return True
 
 
-class HarvesterAnt(Ant):
-    """HarvesterAnt produces 1 additional food per turn for the colony."""
-
-    name = 'Harvester'
-    food_cost = 2
-    implemented = True
-
-    def action(self, colony):
-        """Produce 1 additional food for the colony.
-
-        colony -- The AntColony, used to access game state information.
-        """
-        colony.food += 1
-
-
 def random_or_none(l):
     """Return a random element of list l, or return None if l is empty."""
     return random.choice(l) if l else None
-
-
-class ThrowerAnt(Ant):
-    """ThrowerAnt throws a leaf each turn at the nearest Bee in its range."""
-
-    name = 'Thrower'
-    implemented = True
-    food_cost = 4
-    damage = 1
-
-    def nearest_bee(self, hive):
-        """Return the nearest Bee in a Place that is not the Hive, connected to
-        the ThrowerAnt's Place by following entrances.
-
-        This method returns None if there is no such Bee.
-
-        Problem B5: This method returns None if there is no Bee in range.
-        """
-        "*** YOUR CODE HERE ***"
-        return random_or_none(self.place.bees)
-
-    def throw_at(self, target):
-        """Throw a leaf at the target Bee, reducing its armor."""
-        if target is not None:
-            target.reduce_armor(self.damage)
-
-    def action(self, colony):
-        """Throw a leaf at the nearest Bee in range."""
-        self.throw_at(self.nearest_bee(colony.hive))
-
 
 class Hive(Place):
     """The Place from which the Bees launch their assault.
@@ -367,6 +322,7 @@ def start_with_strategy(args, strategy):
     AntColony(strategy, Hive(assault_plan), ant_types(), layout).simulate()
 
 
+
 ###########
 # Layouts #
 ###########
@@ -387,6 +343,7 @@ def test_layout(queen, register_place, length=8, tunnels=1):
 
 def dry_layout(queen, register_place, length=8, tunnels=3):
     mixed_layout(queen, register_place, length, tunnels, 0)
+
 
 
 #################
@@ -445,6 +402,50 @@ class Water(Place):
         Place.add_insect(self, insect)
         if not insect.watersafe:
             insect.reduce_armor(insect.armor)
+
+
+class HarvesterAnt(Ant):
+    """HarvesterAnt produces 1 additional food per turn for the colony."""
+    
+    name = 'Harvester'
+    food_cost = 2
+    implemented = True
+    
+    def action(self, colony):
+        """Produce 1 additional food for the colony.
+            
+            colony -- The AntColony, used to access game state information.
+            """
+        colony.food += 1
+
+
+class ThrowerAnt(Ant):
+    """ThrowerAnt throws a leaf each turn at the nearest Bee in its range."""
+    
+    name = 'Thrower'
+    implemented = True
+    food_cost = 4
+    damage = 1
+    
+    def nearest_bee(self, hive):
+        """Return the nearest Bee in a Place that is not the Hive, connected to
+            the ThrowerAnt's Place by following entrances.
+            
+            This method returns None if there is no such Bee.
+            
+            Problem B5: This method returns None if there is no Bee in range.
+            """
+        "*** YOUR CODE HERE ***"
+        return random_or_none(self.place.bees)
+    
+    def throw_at(self, target):
+        """Throw a leaf at the target Bee, reducing its armor."""
+        if target is not None:
+            target.reduce_armor(self.damage)
+
+    def action(self, colony):
+        """Throw a leaf at the nearest Bee in range."""
+        self.throw_at(self.nearest_bee(colony.hive))
 
 
 class FireAnt(Ant):
@@ -578,6 +579,7 @@ class QueenAnt(ThrowerAnt):
         """A queen ant throws a leaf, but also doubles the damange of ants
         behind her.  Imposter queens do only one thing: die."""
         "*** YOUR CODE HERE ***"
+
 
 class AntRemover(Ant):
     """Allows the player to remove ants from the board in the GUI."""
