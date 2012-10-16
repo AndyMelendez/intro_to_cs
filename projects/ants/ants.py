@@ -1,5 +1,7 @@
 # Project: Ants
-# Authors: Krishna Parashar & Andrea Melendez
+# Authors:
+#   Person A: Krishna Parashar
+#   Person B: Andrea Melendez
 # Login: cs61a-wh & cs61a-awz
 # TA: Julia Oh
 # Section: 11
@@ -31,13 +33,13 @@ class Place(object):
         exit -- The Place reached by exiting this Place (may be None).
         """
         self.name = name
-        self.exit = exit
         self.bees = []        # A List of Bees
         self.ant = None       # An Ant
         self.entrance = None  # A Place
         self.exit = exit      # An Exit
         if exit != None:
             self.exit.entrance = self
+
 
     def add_insect(self, insect):
         """Add an Insect to this Place.
@@ -149,7 +151,8 @@ class Ant(Insect):
     implemented = False  # Only implemented Ant classes should be instantiated
     damage = 0
     food_cost = 0
-    blocks_path = True
+    blocks_path = True   # Ant blocks bees by default
+    container = False    # Only one ant can occupy space by default
 
     def __init__(self, armor=1):
         """Create an Ant with an armor quantity."""
@@ -157,11 +160,66 @@ class Ant(Insect):
 
     def is_ant(self):
         return True
+    
+    def can_contain(self, other):
+        if (self.container and self.ant is None and not other.container):
+            return True
+
+
+class HarvesterAnt(Ant):
+    """HarvesterAnt produces 1 additional food per turn for the colony."""
+    
+    name = 'Harvester'
+    food_cost = 2
+    implemented = True
+    
+    def action(self, colony):
+        """Produce 1 additional food for the colony.
+            
+            colony -- The AntColony, used to access game state information.
+            """
+        colony.food += 1
 
 
 def random_or_none(l):
     """Return a random element of list l, or return None if l is empty."""
     return random.choice(l) if l else None
+
+
+class ThrowerAnt(Ant):
+    """ThrowerAnt throws a leaf each turn at the nearest Bee in its range."""
+    
+    name = 'Thrower'
+    implemented = True
+    food_cost = 4
+    damage = 1
+    minimum_range = 0 # Default Minimum
+    maximum_range = 8 # Default Max
+    
+    def nearest_bee(self, hive):
+        """Return the nearest Bee in a Place that is not the Hive, connected to
+            the ThrowerAnt's Place by following entrances.
+            
+            This method returns None if there is no such Bee.
+            
+            Problem B5: This method returns None if there is no Bee in range.
+            """
+        nonlocal minimum_range
+        nonlocal maximum_range
+        place, count = self.place, 0
+        while (): # Distance is greater than minimum
+        while (): # Distance is less than minimum
+        return random_or_none(self.place.bees)
+    
+    def throw_at(self, target):
+        """Throw a leaf at the target Bee, reducing its armor."""
+        if target is not None:
+            target.reduce_armor(self.damage)
+    
+    def action(self, colony):
+        """Throw a leaf at the nearest Bee in range."""
+        self.throw_at(self.nearest_bee(colony.hive))
+
 
 class Hive(Place):
     """The Place from which the Bees launch their assault.
@@ -390,9 +448,9 @@ def make_insane_assault_plan():
 
 
 
-##############
-# Extensions #
-##############
+#####################
+# Ants & Extensions #
+#####################
 
 class Water(Place):
     """Water is a place that can only hold 'watersafe' insects."""
@@ -402,67 +460,6 @@ class Water(Place):
         Place.add_insect(self, insect)
         if not insect.watersafe:
             insect.reduce_armor(insect.armor)
-
-
-class HarvesterAnt(Ant):
-    """HarvesterAnt produces 1 additional food per turn for the colony."""
-    
-    name = 'Harvester'
-    food_cost = 2
-    implemented = True
-    
-    def action(self, colony):
-        """Produce 1 additional food for the colony.
-            
-            colony -- The AntColony, used to access game state information.
-            """
-        colony.food += 1
-
-
-class ThrowerAnt(Ant):
-    """ThrowerAnt throws a leaf each turn at the nearest Bee in its range."""
-    
-    name = 'Thrower'
-    implemented = True
-    food_cost = 4
-    damage = 1
-    
-    def nearest_bee(self, hive):
-        """Return the nearest Bee in a Place that is not the Hive, connected to
-            the ThrowerAnt's Place by following entrances.
-            
-            This method returns None if there is no such Bee.
-            
-            Problem B5: This method returns None if there is no Bee in range.
-            """
-        "*** YOUR CODE HERE ***"
-        return random_or_none(self.place.bees)
-    
-    def throw_at(self, target):
-        """Throw a leaf at the target Bee, reducing its armor."""
-        if target is not None:
-            target.reduce_armor(self.damage)
-
-    def action(self, colony):
-        """Throw a leaf at the nearest Bee in range."""
-        self.throw_at(self.nearest_bee(colony.hive))
-
-
-class FireAnt(Ant):
-    """FireAnt cooks any Bee in its Place when it expires."""
-
-    name = 'Fire'
-    damage = 3
-    food_cost = 4
-    armor = 1
-    implemented = True
-
-    def reduce_armor(self, amount):
-        place = self.place # Keeps track of place so bee can be damaged when ant dies
-        Insect.reduce_armor(self, amount)
-        if self.armor <= 0:
-            for bee in place.bees[:]:
-                bee.reduce_armor(self.damage)
 
 
 class LongThrower(ThrowerAnt):
@@ -481,6 +478,23 @@ class ShortThrower(ThrowerAnt):
     implemented = False
 
 
+class FireAnt(Ant):
+    """FireAnt cooks any Bee in its Place when it expires."""
+    
+    name = 'Fire'
+    damage = 3
+    food_cost = 4
+    armor = 1
+    implemented = True
+    
+    def reduce_armor(self, amount):
+        place = self.place # Keeps track of place so bee dies with ant
+        Insect.reduce_armor(self, amount)
+        if self.armor <= 0:
+            for bee in place.bees[:]:
+                bee.reduce_armor(self.damage)
+
+
 class WallAnt(Ant):
     """WallAnt is an Ant which has a large amount of armor."""
 
@@ -489,14 +503,8 @@ class WallAnt(Ant):
     armor = 4
     implemented = True
 
-    ######################
-    # WHAT DOES THIS DO? #
-    ######################
-    """
     def __init__(self):
-        "*** YOUR CODE HERE ***"
-        Ant.__init__(self)
-    """
+    	Ant.__init__(self, self.armor)
 
 
 class NinjaAnt(Ant):
@@ -547,7 +555,9 @@ class HungryAnt(Ant):
 class BodyguardAnt(Ant):
     """BodyguardAnt provides protection to other Ants."""
     name = 'Bodyguard'
-    "*** YOUR CODE HERE ***"
+    food_cost = 4
+    armor = 2
+    container = True
     implemented = False
 
     def __init__(self):
@@ -600,14 +610,25 @@ def make_slow(action):
 
     action -- An action method of some Bee
     """
-    "*** YOUR CODE HERE ***"
+    """
+    def ____(self, colony)
+        if time is devisble by 2:
+            some thing with time....
+        else:
+            do nothing
+    return ___
+    """
 
 def make_stun(action):
     """Return a new action method that does nothing.
 
     action -- An action method of some Bee
     """
-    "*** YOUR CODE HERE ***"
+    """
+    def _____(self, )
+        _____
+    return _____
+    """
 
 def apply_effect(effect, bee, duration):
     """Apply a status effect to a Bee that lasts for duration turns."""
@@ -618,7 +639,8 @@ class SlowThrower(ThrowerAnt):
     """ThrowerAnt that causes Slow on Bees."""
 
     name = 'Slow'
-    "*** YOUR CODE HERE ***"
+    food_cost = 4
+    armor = 1
     implemented = False
 
     def throw_at(self, target):
@@ -630,7 +652,8 @@ class StunThrower(ThrowerAnt):
     """ThrowerAnt that causes Stun on Bees."""
 
     name = 'Stun'
-    "*** YOUR CODE HERE ***"
+    food_cost = 6
+    armor = 1
     implemented = False
 
     def throw_at(self, target):
