@@ -2,7 +2,9 @@
 # Authors:
 #   Person A: Krishna Parashar
 #   Person B: Andrea Melendez
-# Login: cs61a-wh & cs61a-awz
+# Logins:
+#   Person A: cs61a-wh
+#   Person B: cs61a-awz
 # TA: Julia Oh
 # Section: 11
 # Description: Implements game logic for Ants Vs. SomeBees.
@@ -51,10 +53,13 @@ class Place(object):
         There can be any number of Bees in a Place.
         """
         if insect.is_ant():
-            # Phase 2: Special handling for BodyguardAnt
-            "*** YOUR CODE HERE ***"
-            assert self.ant is None, 'Two ants in {0}'.format(self)
+            assert self.ant is None or insect.can_contain(self.ant) or self.ant.can_contain(insect), 'Two ants in {0}'.format(self)
             self.ant = insect
+            if (self.ant.can_contain(insect)):
+                self.ant.contain_ant(insect)
+            elif (insect.can_contain(self.ant)):
+                insect.contain_ant(self.ant)
+                self.ant = insect
         else:
             self.bees.append(insect)
         insect.place = self
@@ -162,7 +167,7 @@ class Ant(Insect):
         return True
     
     def can_contain(self, other):
-        if (self.container and self.ant is None and not other.container):
+        if ((self.container) and (self.ant is None) and (not other.container)):
             return True
 
 
@@ -193,10 +198,10 @@ class ThrowerAnt(Ant):
     implemented = True
     food_cost = 4
     damage = 1
-    minimum_range = 0 # Default Minimum
-    maximum_range = 8 # Default Max
+    min_range = 0
+    max_range = 10
     
-    def nearest_bee(self, hive):
+    def nearest_bee(self, hive, min = min_range, max = max_range):
         """Return the nearest Bee in a Place that is not the Hive, connected to
             the ThrowerAnt's Place by following entrances.
             
@@ -204,12 +209,18 @@ class ThrowerAnt(Ant):
             
             Problem B5: This method returns None if there is no Bee in range.
             """
-        nonlocal minimum_range
-        nonlocal maximum_range
-        place, count = self.place, 0
-        while (): # Distance is greater than minimum
-        while (): # Distance is less than minimum
-        return random_or_none(self.place.bees)
+
+        place = self.place
+        b_mileage = 0
+        while (place.entrance != hive and b_mileage < min):
+            # If distance is less than min, then move into range
+            place = place.entrance
+            b_mileage += 1
+        while (place.entrance != hive and b_mileage < max and len(place.bees) == 0):
+            # If distance is less than max, then attack bees!
+            place = place.entrance 
+            b_mileage += 1
+        return random_or_none(place.bees)
     
     def throw_at(self, target):
         """Throw a leaf at the target Bee, reducing its armor."""
@@ -459,24 +470,35 @@ class Water(Place):
         """Add insect if it is watersafe, otherwise reduce its armor to 0."""
         Place.add_insect(self, insect)
         if not insect.watersafe:
-            insect.reduce_armor(insect.armor)
+            insect.reduce_armor(insect.armor) # Kills insect
 
 
 class LongThrower(ThrowerAnt):
     """A ThrowerAnt that only throws leaves at Bees at least 3 places away."""
 
     name = 'Long'
-    "*** YOUR CODE HERE ***"
-    implemented = False
+    food_cost = 3
+    armor = 1
+    min_range = 4
+    max_range = 10
+    implemented = True
+
+    def nearest_bee(self, hive):
+        return ThrowerAnt.nearest_bee(self, hive, self.min_range, self.max_range)
 
 
 class ShortThrower(ThrowerAnt):
     """A ThrowerAnt that only throws leaves at Bees within 3 places."""
 
     name = 'Short'
-    "*** YOUR CODE HERE ***"
-    implemented = False
+    food_cost = 3
+    armor = 1
+    min_range = 0
+    max_range = 3
+    implemented = True
 
+    def nearest(self, hive):
+        return ThrowerAnt.nearest_bee(self, hive, self.min_range, self.max_range)
 
 class FireAnt(Ant):
     """FireAnt cooks any Bee in its Place when it expires."""
@@ -538,18 +560,25 @@ class HungryAnt(Ant):
     While eating, the HungryAnt can't eat another Bee.
     """
     name = 'Hungry'
-    "*** YOUR CODE HERE ***"
-    implemented = False
+    food_cost = 4
+    armor = 1
+    time_to_digest = 3
+    implemented = True
 
     def __init__(self):
         Ant.__init__(self)
-        "*** YOUR CODE HERE ***"
-
+        self.digesting = 0
+        
     def eat_bee(self, bee):
-        "*** YOUR CODE HERE ***"
+        if bee != None:
+            bee.reduce_armor(bee.armor)
+            self.digesting = self.time_to_digest
 
     def action(self, colony):
-        "*** YOUR CODE HERE ***"
+        if self.digesting > 0:
+            self.digesting -= 1
+        else:
+            self.eat_bee(random_or_none(self.place.bees))
 
 
 class BodyguardAnt(Ant):
@@ -558,20 +587,24 @@ class BodyguardAnt(Ant):
     food_cost = 4
     armor = 2
     container = True
-    implemented = False
+    implemented = True
 
     def __init__(self):
         Ant.__init__(self, 2)
         self.ant = None  # The Ant hidden in this bodyguard
 
     def contain_ant(self, ant):
-        "*** YOUR CODE HERE ***"
+        self.ant = ant
 
     def reduce_armor(self, amount):
-        "*** YOUR CODE HERE ***"
+        place = self.place
+        Insect.reduce_armor(self, amount)
+        if self.armor <= 0:
+            place.ant = self.ant
 
     def action(self, colony):
-        "*** YOUR CODE HERE ***"
+        if self.ant is not None:
+            self.ant.action(Colony)
 
 
 class QueenAnt(ThrowerAnt):
@@ -582,7 +615,7 @@ class QueenAnt(ThrowerAnt):
     implemented = False
 
     def __init__(self):
-        ThrowerAnt.__init__(self, 1)  #
+        ThrowerAnt.__init__(self, 1) 
         "*** YOUR CODE HERE ***"
 
     def action(self, colony):
