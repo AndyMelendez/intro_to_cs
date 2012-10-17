@@ -159,6 +159,7 @@ class Ant(Insect):
     food_cost = 0
     blocks_path = True   # Ant blocks bees by default
     container = False    # Only one ant can occupy space by default
+    double_damage = False
 
     def __init__(self, armor = 1):
         """Create an Ant with an armor quantity."""
@@ -220,7 +221,7 @@ class ThrowerAnt(Ant):
             place = place.entrance
             b_mileage += 1
         while (place.entrance != hive and b_mileage < max and len(place.bees) == 0):
-            # If distance is less than max, then attack bees!
+            # If distance is less than max, then look for and attack bees!
             place = place.entrance 
             b_mileage += 1
         return random_or_none(place.bees)
@@ -615,17 +616,39 @@ class QueenAnt(ThrowerAnt):
     """The Queen of the colony.  The game is over if a bee enters her place."""
 
     name = 'Queen'
-    "*** YOUR CODE HERE ***"
-    implemented = False
+    food_cost = 2
+    armor = 2
+    num_of_queens = 0
+    implemented = True
 
     def __init__(self):
         ThrowerAnt.__init__(self, 1) 
-        "*** YOUR CODE HERE ***"
+        QueenAnt.num_of_queens += 1
+        self.num_of_queens = QueenAnt.num_of_queens
 
     def action(self, colony):
         """A queen ant throws a leaf, but also doubles the damange of ants
         behind her.  Imposter queens do only one thing: die."""
-        "*** YOUR CODE HERE ***"
+        """
+        if (num_of_queens > 1):
+            Insect.reduce_armor(self, self.armor)
+        else:
+            colony.queen = QueenPlace(colony.queen, self.place)
+            while():
+                if ():
+                    if ():
+                    else ():
+        """
+class QueenPlace(Place):
+    """Evalutes to the list of all bees that are either in the original colony.queen
+    location or the place of the QueenAnt.
+    """
+    """
+    def __init__(self, orig_loc, new_loc)
+
+    @property
+    def bees(self)
+    """
 
 
 class AntRemover(Ant):
@@ -647,29 +670,39 @@ def make_slow(action):
 
     action -- An action method of some Bee
     """
-    """
-    def ____(self, colony)
-        if time is devisble by 2:
-            some thing with time....
+    
+    def temp_action(self, colony):
+        if (colony.time % 2 == 0): #Ensures time is even
+            return action(colony)
         else:
-            do nothing
-    return ___
-    """
+            print ('')
+    return temp_action
+
 
 def make_stun(action):
     """Return a new action method that does nothing.
 
     action -- An action method of some Bee
     """
-    """
-    def _____(self, )
-        _____
-    return _____
-    """
+                          
+    def temp_action(self, colony):
+        print ('')
+    return temp_action
+
 
 def apply_effect(effect, bee, duration):
     """Apply a status effect to a Bee that lasts for duration turns."""
-    "*** YOUR CODE HERE ***"
+    original_action = bee.action
+    temp_action = effect(original_action)
+    time = 0
+    def change_action(colony):
+        nonlocal time
+        if (time < duration):
+            time += 1
+            return temp_action(bee, colony)
+        else:
+            return original_action(colony)
+    bee.action = change_action
 
 
 class SlowThrower(ThrowerAnt):
@@ -678,7 +711,7 @@ class SlowThrower(ThrowerAnt):
     name = 'Slow'
     food_cost = 4
     armor = 1
-    implemented = False
+    implemented = True
 
     def throw_at(self, target):
         if target:
@@ -691,7 +724,7 @@ class StunThrower(ThrowerAnt):
     name = 'Stun'
     food_cost = 6
     armor = 1
-    implemented = False
+    implemented = True
 
     def throw_at(self, target):
         if target:
