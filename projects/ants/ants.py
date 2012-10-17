@@ -205,7 +205,7 @@ class ThrowerAnt(Ant):
     min_range = 0
     max_range = 10
     
-    def nearest_bee(self, hive, min = min_range, max = max_range):
+    def nearest_bee(self, hive):
         """Return the nearest Bee in a Place that is not the Hive, connected to
             the ThrowerAnt's Place by following entrances.
             
@@ -213,14 +213,14 @@ class ThrowerAnt(Ant):
             
             Problem B5: This method returns None if there is no Bee in range.
             """
-
+        
         place = self.place
         b_mileage = 0
-        while (place.entrance != hive and b_mileage < min):
+        while (place.entrance != hive and b_mileage < self.min_range):
             # If distance is less than min, then move into range
             place = place.entrance
             b_mileage += 1
-        while (place.entrance != hive and b_mileage < max and len(place.bees) == 0):
+        while (place.entrance != hive and b_mileage < self.max_range and len(place.bees) == 0):
             # If distance is less than max, then look for and attack bees!
             place = place.entrance 
             b_mileage += 1
@@ -629,31 +629,39 @@ class QueenAnt(ThrowerAnt):
     def action(self, colony):
         """A queen ant throws a leaf, but also doubles the damange of ants
         behind her.  Imposter queens do only one thing: die."""
-        """
+        
         if (num_of_queens > 1):
             Insect.reduce_armor(self, self.armor)
         else:
             colony.queen = QueenPlace(colony.queen, self.place)
-            while():
-                if ():
-                    if ():
-                    else ():
-        """
+            place = self.place.exit
+            ThrowerAnt.action(self, colony) #Imports ThrowerAnt action
+            while(place != None):
+                if (place is accupied)
+                    if (requirements):
+                        place.ant.damage =* 2 # Doubles damage
+                        place.ant.double_damage = True # Marks that damaged has been double
+                    elif place.ant.double_damage = False:
+                return place
+                
+
+
 class QueenPlace(Place):
     """Evalutes to the list of all bees that are either in the original colony.queen
     location or the place of the QueenAnt.
     """
-    """
-    def __init__(self, orig_loc, new_loc)
+   
+    def __init__(self, orig_loc, new_loc):
+        self.original_qplace = orig_loc
+        self.new_qplace = new_loc
 
     @property
-    def bees(self)
-    """
-
+    def bees(self):
+        return self.original_qplace.bees + self.new_qplace.bees
 
 class AntRemover(Ant):
     """Allows the player to remove ants from the board in the GUI."""
-
+    # We didn't have to update remover according to project page, thus test will no pass
     name = 'Remover'
     implemented = True
 
@@ -675,7 +683,7 @@ def make_slow(action):
         if (colony.time % 2 == 0): #Ensures time is even
             return action(colony)
         else:
-            print ('')
+            return
     return temp_action
 
 
@@ -686,7 +694,7 @@ def make_stun(action):
     """
                           
     def temp_action(self, colony):
-        print ('')
+        return
     return temp_action
 
 
