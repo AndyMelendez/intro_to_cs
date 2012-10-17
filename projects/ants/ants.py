@@ -53,9 +53,10 @@ class Place(object):
         There can be any number of Bees in a Place.
         """
         if insect.is_ant():
-            assert self.ant is None or insect.can_contain(self.ant) or self.ant.can_contain(insect), 'Two ants in {0}'.format(self)
-            self.ant = insect
-            if (self.ant.can_contain(insect)):
+            assert (self.ant is None) or (insect.can_contain(self.ant)) or (self.ant.can_contain(insect)), 'Two ants in {0}'.format(self)
+            if self.ant is None:
+                self.ant = insect
+            elif (self.ant.can_contain(insect)):
                 self.ant.contain_ant(insect)
             elif (insect.can_contain(self.ant)):
                 insect.contain_ant(self.ant)
@@ -159,7 +160,7 @@ class Ant(Insect):
     blocks_path = True   # Ant blocks bees by default
     container = False    # Only one ant can occupy space by default
 
-    def __init__(self, armor=1):
+    def __init__(self, armor = 1):
         """Create an Ant with an armor quantity."""
         Insect.__init__(self, armor)
 
@@ -169,6 +170,8 @@ class Ant(Insect):
     def can_contain(self, other):
         if ((self.container) and (self.ant is None) and (not other.container)):
             return True
+        else:
+            return False
 
 
 class HarvesterAnt(Ant):
@@ -536,13 +539,14 @@ class NinjaAnt(Ant):
     name = 'Ninja'
     food_cost = 6
     armor = 1
+    damage = 1
     blocks_path = False
     implemented = True
 
     def action(self, colony):
         bees_list = self.place.bees
         for bee in bees_list[:]:
-        	bee.reduce_armor(1)
+        	bee.reduce_armor(self.damage)
 
 
 class ScubaThrower(ThrowerAnt):
@@ -604,7 +608,7 @@ class BodyguardAnt(Ant):
 
     def action(self, colony):
         if self.ant is not None:
-            self.ant.action(Colony)
+            self.ant.action(colony)
 
 
 class QueenAnt(ThrowerAnt):
