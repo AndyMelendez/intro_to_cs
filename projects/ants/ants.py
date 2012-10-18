@@ -707,6 +707,7 @@ def apply_effect(effect, bee, duration):
     time = 0
     def change_action(colony):
         nonlocal time
+        nonlocal duration
         if (time < duration):
             time += 1
             return temp_action(bee, colony)

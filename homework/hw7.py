@@ -32,7 +32,14 @@ def apply(operator_name, shape):
         >>> apply('perimeter', Rect(2, 4))
         12
         """
-    "*** YOUR CODE HERE ***"
+    tag = (type_tag(shape))
+    key = (operator_name, tag)
+    return apply.implementations[key](shape)
+
+apply.implementations = {('area', 's'): lambda square: square.side*square.side, 
+                         ('perimeter', 's'): lambda square: square.side*4, 
+                         ('area', 'r'): lambda rectangle: rectangle.width*rectangle.height, 
+                         ('perimeter', 'r'): lambda rectangle: rectangle.width*2 + rectangle.height*2}
 
 # Q2.
 
@@ -85,7 +92,7 @@ def part(n):
         
         >>> part(5)
         7
-        >>> part(10)
+g        >>> part(10)
         42
         >>> part(15)
         176
