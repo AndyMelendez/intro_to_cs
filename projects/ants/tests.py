@@ -732,7 +732,7 @@ class TestExtraCredit(AntTest):
 
 
 
-@main
+#@main
 def main(*args):
     import argparse
     parser = argparse.ArgumentParser(description="Run Ants Tests")

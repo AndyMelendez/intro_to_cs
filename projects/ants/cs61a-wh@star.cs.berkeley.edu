@@ -67,7 +67,7 @@ class Place(object):
 
     def remove_insect(self, insect):
         """Remove an Insect from this Place."""
-        if type(insect) != QueenAnt or insect.num_of_queens > 1: #Ensures you can't remove the one true queen!
+        if type(insect) != QueenAnt or insect.num_of_queens > 1:
         	if not insect.is_ant():
         		self.bees.remove(insect)
         	else:
