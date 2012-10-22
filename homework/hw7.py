@@ -92,30 +92,30 @@ def part(n):
         
         >>> part(5)
         7
-g        >>> part(10)
+        >>> part(10)
         42
         >>> part(15)
         176
         >>> part(20)
         627
-    """    
-"""
-def memo(f):
+    """
 
-    cache = {}
-    def memoized(*args):
-        if args not in cache:
-            cache[args] = f(*args)
-        return cache[args]
-    return memoized
-    def count_change(a, kinds=(50, 25, 10, 5, 1)):
-    if n == 0:
-        return 1
-    if n < 0 or len(kinds) == 0:
-        return 0
-    d = kinds[0]
-    return count_change(a, kinds[1:]) + count_change(a - d, kinds)
-"""
+    def memo(f):
+        cache = {}
+        def memoized(*args):
+            if args not in cache:
+                cache[args] = f(*args)
+            return cache[args]
+        return memoized
+	
+    @memo
+    def partition(n, base_value):
+        if (n < base_value):
+            return 0
+        if (n == base_value):
+            return 1
+        return partition(n - base_value, base_value) + partition(n, base_value + 1)
+    return partition(n, 1)
 
 # Q4.
 
@@ -127,7 +127,10 @@ def make_anonymous_factorial():
         >>> make_anonymous_factorial()(5)
         120
         """
-    return YOUR_EXPRESSION_HERE
+    return lambda n: 1 if n == 1 else mul(n, make_anonymous_factorial()(sub(n, 1)))
+
+x = make_anonymous_factorial()(201)
+print (x)
 
 # Q5.
 
