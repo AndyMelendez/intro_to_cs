@@ -39,7 +39,6 @@ def tokenize(line):
         ...
         ValueError: invalid token GO
         """
-    "*** YOUR CODE HERE ***"
     for item in ALL_BRACKETS:
         line = line.replace(item, " " + item + " ")
     line = line.split(" ")
@@ -170,6 +169,8 @@ def brack_read(tokens):
             if token in left_brackets:
                 previous.append(token)
             elif token in right_brackets:
+                if token != LEFT_RIGHT[previous.pop()]:
+                    raise(SyntaxError('unexpected ' + token))
                 if previous == []:
                     if first == True:
                         first = tokens[0]
@@ -184,7 +185,6 @@ def brack_read(tokens):
                             return Pair(exp, read(tokens[1:-1]))
         if (previous != []):
             raise(SyntaxError('Unexpected End of Line'))
-"""
         if first:
             first = tokens[0]
                 if is_number(first):
@@ -192,8 +192,7 @@ def brack_read(tokens):
                 else: # It's a bracket!
                     expression = left_to_symbol[first]
                     return Pair(exp, read(tokens[1:-1]))
-    I am now lost, cause nothing is working!
-"""
+        return list_to_pair(expressions)
 
     left_brackets = LEFT_RIGHT.keys()
     right_brackets = LEFT_RIGHT.values()
