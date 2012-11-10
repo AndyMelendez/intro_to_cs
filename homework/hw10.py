@@ -39,16 +39,18 @@ def tokenize(line):
         ...
         ValueError: invalid token GO
         """
-        for item in ALL_BRACKETS:
-            line = line.replace(item, " " + item + " ")
-        line = line.split(" ")
-        list_line=[]
-        for token in line:
-            if token in ALL_BRACKETS:
-                list_line.append[token]
+    "*** YOUR CODE HERE ***"
+    for item in ALL_BRACKETS:
+        line = line.replace(item, " " + item + " ")
+    line = line.split(" ")
+    list_line=[]
+    for token in line:
+        if token in ALL_BRACKETS:
+            list_line.append[token]
         else:
             list_line.append[coerce_to_number(token)]
     return list_line
+
 
 def coerce_to_number(token):
     """Coerce a string to a number or return None.
@@ -95,6 +97,15 @@ def isvalid(tokens):
         True
         """
     "*** YOUR CODE HERE ***"
+    valid_list=[]
+    for t in tokens:
+        if t in LEFT_RIGHT:
+            valid_list.append[t]
+        elif t == LEFT_RIGHT[valid_list[(len(valid_list)-1)]]:
+            valid_list.pop[(len(valid_list)-1)]
+    if len(valid_list)> 0:
+        return False
+    return True
 
 # Q3.
 
@@ -136,9 +147,14 @@ def brack_read(tokens):
         """
     if tokens == []:
         raise(SyntaxError('Unexpected End of Line'))
-    
+
     def is_number(token): #Checks if arg is int or float
-            return (type(token) is int or type(token) is float)
+        return (type(token) is int or type(token) is float)
+
+    def list_to_pair(list):
+        if list == []:
+            return nil
+        return Pair(l[0], list_to_pair(l[1:]))
 
     def action(tokens, first = False):
         expressions = []
@@ -157,17 +173,32 @@ def brack_read(tokens):
                 if previous == []:
                     if first == True:
                         first = tokens[0]
-                            if is_number(first):
-                                expressions.append(buffer)
-                                buffer = []
-                                return first
-                            else: # It's a bracket!
-                                expression = left_to_symbol[first]
-                                expressions.append(buffer)
-                                buffer = []
-                                return Pair(exp, read(tokens[1:-1]))
-        if prev != []:
+                        if is_number(first):
+                            expressions.append(buffer)
+                            buffer = []
+                            return first
+                        else: # It's a bracket!
+                            expression = left_to_symbol[first]
+                            expressions.append(buffer)
+                            buffer = []
+                            return Pair(exp, read(tokens[1:-1]))
+        if (previous != []):
             raise(SyntaxError('Unexpected End of Line'))
+"""
+        if first:
+            first = tokens[0]
+                if is_number(first):
+                    return first
+                else: # It's a bracket!
+                    expression = left_to_symbol[first]
+                    return Pair(exp, read(tokens[1:-1]))
+    I am now lost, cause nothing is working!
+"""
+
+    left_brackets = LEFT_RIGHT.keys()
+    right_brackets = LEFT_RIGHT.values()
+    left_to_symbol = {key[0]:BRACKETS[key] for key in BRACKETS.keys()}
+    return read(tokens, True)
 
 # Q4.
 
@@ -280,4 +311,8 @@ def read_eval_print_loop():
             print(type(err).__name__ + ':', err)
         except (KeyboardInterrupt, EOFError):  # <Control>-D, etc.
             return
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
 
