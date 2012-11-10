@@ -39,7 +39,16 @@ def tokenize(line):
         ...
         ValueError: invalid token GO
         """
-    "*** YOUR CODE HERE ***"
+        for item in ALL_BRACKETS:
+            line = line.replace(item, " " + item + " ")
+        line = line.split(" ")
+        list_line=[]
+        for token in line:
+            if token in ALL_BRACKETS:
+                list_line.append[token]
+        else:
+            list_line.append[coerce_to_number(token)]
+    return list_line
 
 def coerce_to_number(token):
     """Coerce a string to a number or return None.
