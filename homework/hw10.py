@@ -1,7 +1,8 @@
-# Name:
-# Login:
-# TA:
-# Section:
+# 61A Homework 7
+# Name: Krishna Parashar and Andrea Melendez
+# Login: cs61a-wh and cs61a-akz
+# TA: Julia Oh
+# Section: 11
 
 BRACKETS = {('[', ']'): '+',
     ('(', ')'): '-',
@@ -124,7 +125,40 @@ def brack_read(tokens):
         ...
         SyntaxError: unexpected end of line
         """
-    "*** YOUR CODE HERE ***"
+    if tokens == []:
+        raise(SyntaxError('Unexpected End of Line'))
+    
+    def is_number(token): #Checks if arg is int or float
+            return (type(token) is int or type(token) is float)
+
+    def action(tokens, first = False):
+        expressions = []
+        buffer = []
+        previous = []
+        while tokens != []:
+            token = tokens.pop(0)
+            if is_number(token) and buffer == []:
+                #Check is token is valid and nothing is in buffer
+                expressions.append([t]) #Append token ot expression
+                continue #Does not return yet
+            buffer.append(token)
+            if token in left_brackets:
+                previous.append(token)
+            elif token in right_brackets:
+                if previous == []:
+                    if first == True:
+                        first = tokens[0]
+                            if is_number(first):
+                                expressions.append(buffer)
+                                buffer = []
+                                return first
+                            else: # It's a bracket!
+                                expression = left_to_symbol[first]
+                                expressions.append(buffer)
+                                buffer = []
+                                return Pair(exp, read(tokens[1:-1]))
+        if prev != []:
+            raise(SyntaxError('Unexpected End of Line'))
 
 # Q4.
 
