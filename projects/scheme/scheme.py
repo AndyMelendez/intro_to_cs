@@ -2,10 +2,8 @@
 eval/apply mutual recurrence, environment model, and read-eval-print loop.
 """
 
-from buffer import Buffer
 from scheme_primitives import *
 from scheme_reader import *
-from scheme_tokens import tokenize_lines, DELIMITERS
 from ucb import main, trace
 
 ##############
@@ -258,7 +256,7 @@ def do_cond_form(vals, env):
                 raise SchemeError("badly formed else clause")
         else:
             test = scheme_eval(clause.first, env)
-        if test:
+        if scheme_true(test):
             "*** YOUR CODE HERE ***"
 
 def do_begin_form(vals, env):
@@ -281,7 +279,7 @@ def check_form(expr, min, max = None):
     at least MIN and no more than MAX (default: no maximum). Raises
     a SchemeError if this is not the case."""
     if not scheme_listp(expr):
-        raise Exception("badly formed expression: %s", expr)
+        raise SchemeError("badly formed expression: " + str(expr))
     length = len(expr)
     if length < min:
         raise SchemeError("too few operands in form")

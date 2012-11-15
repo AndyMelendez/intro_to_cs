@@ -523,10 +523,6 @@ one-through-four
 ; expect 2
 ; expect 2
 
-(define f (lambda (x y . z) z))
-(f 1 2 3 4 5)
-; expect (3 4 5)
-
 (define g (mu () x))
 (define (high f x)
   (f))
@@ -561,7 +557,7 @@ one-through-four
 (len '(1 2 3 4))
 ; expect 4
 
-; Problem 10
+; Problem 18
 
 ;; Merge two lists LIST1 and LIST2 and returns
 ;; the merged lists.
@@ -572,7 +568,7 @@ one-through-four
 (merge '(1 5 7 9) '(4 8 10))
 ; expect (1 4 5 7 8 9 10)
 
-; Problem 11
+; Problem A19
 
 ;; The number of ways to change TOTAL with DENOMS
 ;; At most MAX-COINS total coins can be used.
@@ -585,7 +581,7 @@ one-through-four
 ; expect 8
 
 
-; Problem 12
+; Problem B20
 
 ;; The number of ways to partition TOTAL, where
 ;; each partition must be at most MAX-VALUE
@@ -597,7 +593,7 @@ one-through-four
 ; expect 5
 ; Note: The 5 partitions are [[3 2] [3 1 1] [2 2 1] [2 1 1 1] [1 1 1 1 1]]
 
-; Problem 13
+; Problem 21
 
 ;; A list of all ways to partition TOTAL, where  each partition must
 ;; be at most MAX-VALUE and there are at most MAX-PIECES partitions.

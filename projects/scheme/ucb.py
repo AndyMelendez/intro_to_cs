@@ -7,21 +7,22 @@ import re
 import signal
 import sys
 
-        
+
 def main(fn):
     """Call fn with command line arguments.  Used as a decorator.
 
     The main decorator marks the function that starts a program. For example,
-    
+
     @main
     def my_run_function():
         # function body
-    
+
     Use this instead of the typical __name__ == "__main__" predicate.
     """
     if inspect.stack()[1][0].f_locals['__name__'] == '__main__':
         args = sys.argv[1:] # Discard the script name from command line
         fn(*args) # Call the main function
+    return fn
 
 
 PREFIX = ''
@@ -36,7 +37,7 @@ def trace(fn):
     @functools.wraps(fn)
     def wrapped(*args, **kwds):
         global PREFIX
-        reprs = [repr(e) for e in args] 
+        reprs = [repr(e) for e in args]
         reprs += [repr(k) + '=' + repr(v) for k, v in kwds.items()]
         log('{0}({1})'.format(fn.__name__, ', '.join(reprs)) + ':')
         PREFIX += '    '
@@ -84,7 +85,7 @@ def interact(msg=None):
     # evaluate commands in current namespace
     namespace = frame.f_globals.copy()
     namespace.update(frame.f_locals)
-    
+
     # exit on interrupt
     def handler(signum, frame):
         print()
@@ -97,5 +98,5 @@ def interact(msg=None):
         msg += '    Unix:    <Control>-D continues the program; \n'
         msg += '    Windows: <Control>-Z <Enter> continues the program; \n'
         msg += '    exit() or <Control>-C exits the program'
-        
+
     code.interact(msg, None, namespace)
