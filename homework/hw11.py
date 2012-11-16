@@ -1,8 +1,8 @@
-# Name:
-# Login:
-# TA:
-# Section:
-# Q1.
+# 61A Homework 7
+# Name: Krishna Parashar and Andrea Melendez
+# Login: cs61a-wh and cs61a-akz
+# TA: Julia Oh
+# Section: 11
 
 def num_splits(s, d):
     """Return the number of ways in which s can be partitioned into two
@@ -24,40 +24,27 @@ def num_splits(s, d):
         s.add(k)
         
         After which s is unchanged, and {k}.union(rest) == s
-        """ 
-    
-    counter = 0
+        
     my_list = []
     list_of_sets = [[]]
-    sum_list =[]
+    number_of_sums = []
+    counter, i, j = 0, 0, 0
     while len(s) > 0:
+        counter = 0
         k = s.pop()
         my_list.append(k)
-    for elem in my_list:
-        list_of_sets.extend([subset + [elem] for subset in list_of_sets])
-    def list_powerset(my_list):
-        return reduce(lambda list_of_sets, elem:  + [subset + [elem] for subset in list_of_sets], elem, [[]])
-    #print(list_of_sets)
-    new_list = []
-    for elem in list_of_sets:
-        if len(elem) > 1:
-            new_list.append(elem)
-    #print(new_list)
-    for new_elem in new_list:
-        summ = 0
-        for num in new_elem:
-            summ += num
-        sum_list.append(summ)
-    #print(sum_list)
-    for number in my_list:
-        #print(number)
-        for item in sum_list:
-            difference1 = (number - item)
-            if abs(difference1) in range(1, d):
-                #print("difference1", "(" , number, "-" , item, ")", difference1)
-                counter += 1
-    return counter
-
+    for element in my_list:
+        list_of_sets.extend([subset + [element] for subset in list_of_sets])
+    while i <= (len(list_of_sets) + 1):
+        number_of_sums.append(abs(sum(list_of_sets[i]), list_of_sets[(len(list_of_sets + 1) - i]))
+        i += 1
+    while j <= (number_of_sums + 1):
+        if number_of_sums[i] <= d:
+            counter += 1
+        j += 1
+    print(list_of_sets)
+    print(len(list_of_sets))
+""" 
 # Q2.
 
 def num_trees(n):
@@ -80,14 +67,13 @@ def num_trees(n):
         429
         
         """
+    # Base Case
     if n == 1:
         return 1
     total_trees = 0
-    for i
-
-
-in range(1, n): #
-        total_trees += num_trees(i) * num_trees(n-i) #using factorial from lecture 20
+    for i in range(1, n):
+        # Factorial Recursion
+        total_trees += num_trees(i) * num_trees(n-i)
     return total_trees
 
 
@@ -116,13 +102,13 @@ def mario_number(level):
         180
         """
     """Base Cases"""
-    if level == ' ': #if space/step
+    if level == '': #if beginning or end
+        return 0
+    if level == ' ': #if space or step
         return 1
-    if level == 'P': #if plant
+    if level[0] == 'P': #if plant
         return 0
-    if level == '' #if beginning/end
-        return 0
-    #return mario_number(level[???]) + #mario_number(level[????])
+    return mario_number(level[1:]) + mario_number(level[2:])
 
 # Q4.
 
