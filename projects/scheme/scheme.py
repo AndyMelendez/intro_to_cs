@@ -72,7 +72,16 @@ def apply_primitive(procedure, args, env):
     >>> apply_primitive(plus, twos, env)
     4
     """
-    "*** YOUR CODE HERE ***"
+    python_args = []
+    while args != nil: #Converts Scheme list to Python list
+        python_args.append(args.first)
+        args = args.second
+    if procedure.use_env:
+    	python_args.append(env)
+    try:
+        return procedure.fn(*python_args)
+    except TypeError as e:
+        raise SchemeError(e)
 
 ################
 # Environments #
@@ -95,8 +104,12 @@ class Frame(object):
 
     def lookup(self, symbol):
         """Return the value bound to SYMBOL.  Errors if SYMBOL is not found."""
-        "*** YOUR CODE HERE ***"
-        raise SchemeError("unknown identifier: {0}".format(str(symbol)))
+        if symbol in self.bindings:
+            return self.bindings[symbol]
+        elif symbol in self.parent:
+           return self.parent.lookup[symbol ]
+        else:
+            raise SchemeError("unknown identifier: {0}".format(str(symbol)))
 
     def global_frame(self):
         """The global environment at the root of the parent chain."""
@@ -150,8 +163,8 @@ class MuProcedure(object):
      -----------------
             \   ^__^
              \  (oo)\_______
-                (__)\       )\/\
-                    ||----w |
+                (__)\       )\
+                    ||---ww | \/\
                     ||     ||
     """
 
