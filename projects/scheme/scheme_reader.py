@@ -163,7 +163,7 @@ def read_tail(src):
             src.pop()
             first_token = scheme_read(src)
             second_token = read_tail(src)
-            if second is not nil or second != ')':
+            if second_token is not nil:
                 raise SyntaxError('expected another element after period')
             return first_token
     first = scheme_read(src)
