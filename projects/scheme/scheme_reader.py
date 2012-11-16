@@ -159,7 +159,13 @@ def read_tail(src):
     if src.current() == ")":
         src.pop()
         return nil
-    "*** YOUR CODE HERE ***"
+    if src.current() == '.':
+            src.pop()
+            first_token = scheme_read(src)
+            second_token = read_tail(src)
+            if second is not nil or second != ')':
+                raise SyntaxError('expected another element after period')
+            return first_token
     first = scheme_read(src)
     rest = read_tail(src)
     return Pair(first, rest)
