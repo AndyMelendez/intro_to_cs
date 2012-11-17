@@ -1,3 +1,9 @@
+# 61A Homework 7
+# Name: Krishna Parashar and Andrea Melendez
+# Login: cs61a-wh and cs61a-akz
+# TA: Julia Oh
+# Section: 11
+
 """This module implements the core Scheme interpreter functions, including the
 eval/apply mutual recurrence, environment model, and read-eval-print loop.
 """
@@ -209,7 +215,8 @@ def do_define_form(vals, env):
     target = vals[0]
     if scheme_symbolp(target):
         check_form(vals, 2, 2)
-        "*** YOUR CODE HERE ***"
+        values = scheme_eval(vals[1], env)
+        env.define(target, values)
     elif isinstance(target, Pair):
         "*** YOUR CODE HERE ***"
     else:
@@ -218,7 +225,7 @@ def do_define_form(vals, env):
 def do_quote_form(vals):
     """Evaluate a quote form with parameters VALS."""
     check_form(vals, 1, 1)
-    "*** YOUR CODE HERE ***"
+    return vals[0]
 
 def do_let_form(vals, env):
     """Evaluate a let form with parameters VALS in environment ENV."""
