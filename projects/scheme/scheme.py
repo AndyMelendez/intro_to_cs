@@ -297,6 +297,7 @@ def do_cond_form(vals, env):
         if scheme_true(test):
             if len(clause.second) == 0: return test
             return Pair('begin', clause.second)
+    return None
 
 def do_begin_form(vals, env):
     """Evaluate begin form with parameters VALS in environment ENV."""
