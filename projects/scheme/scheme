@@ -63,8 +63,8 @@ def scheme_apply(procedure, args, env):
     if isinstance(procedure, PrimitiveProcedure):
         return apply_primitive(procedure, args, env)
     elif isinstance(procedure, LambdaProcedure):
-        frame = procedure.env.make_call_frame(procedure.formals, args)
-        return scheme_eval(procedure.body, frame)
+        call_frame = procedure.env.make_call_frame(procedure.formals, args)
+        return scheme_eval(procedure.body, call_frame)
     elif isinstance(procedure, MuProcedure):
         "*** YOUR CODE HERE ***"
     else:
@@ -113,8 +113,8 @@ class Frame(object):
         """Return the value bound to SYMBOL.  Errors if SYMBOL is not found."""
         if symbol in self.bindings:
             return self.bindings[symbol]
-        elif self.parent:
-           return self.parent.lookup(symbol)
+        elif symbol in self.parent:
+           return self.parent.lookup[symbol]
         else:
             raise SchemeError("unknown identifier: {0}".format(str(symbol)))
 
