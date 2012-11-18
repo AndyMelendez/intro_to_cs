@@ -135,7 +135,8 @@ class Frame(object):
         <{a: 1, b: 2, c: 3} -> <Global Frame>>
         """
         frame = Frame(self)
-        "*** YOUR CODE HERE ***"
+        for i range(len(formals)):
+            frame.define(formals[i], vals[i])
         return frame
 
     def define(self, sym, val):
@@ -222,7 +223,9 @@ def do_define_form(vals, env):
         values = scheme_eval(vals[1], env)
         env.define(target, values)
     elif isinstance(target, Pair):
-        "*** YOUR CODE HERE ***"
+        scheme_expression = Pair(target.second, vals.second)
+        lamda_expression = do_lambda_form(scheme_expression, env)
+        env.define(target[0], lamda_expression)
     else:
         raise SchemeError("bad argument to define")
 
