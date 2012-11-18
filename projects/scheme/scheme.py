@@ -295,7 +295,8 @@ def do_cond_form(vals, env):
         else:
             test = scheme_eval(clause.first, env)
         if scheme_true(test):
-            "*** YOUR CODE HERE ***"
+            if len(clause.second) == 0: return test
+            return Pair('begin', clause.second)
 
 def do_begin_form(vals, env):
     """Evaluate begin form with parameters VALS in environment ENV."""
