@@ -1,4 +1,4 @@
-# 61A Homework 7
+# Scheme Project
 # Name: Krishna Parashar and Andrea Melendez
 # Login: cs61a-wh and cs61a-akz
 # TA: Julia Oh
@@ -254,7 +254,6 @@ def do_let_form(vals, env):
         name, value = binding_pair[0], scheme_eval(binding_pair[1], env)
         new_env.define(name, value)
 
-
     # Evaluate all but the last expression after bindings, and return the last
     last = len(exprs)-1
     for i in range(0, last):
@@ -386,8 +385,13 @@ def scheme_optimized_eval(expr, env):
             return do_quote_form(rest)
         elif first == "let":
             "*** YOUR CODE HERE ***"
+            expr, env = do_let_form(rest, env)
+            return scheme_optimized_eval(expr, env)
         else:
             "*** YOUR CODE HERE ***"
+            procedure = scheme_optimized_eval(first, env)
+            args = rest.map(lambda operand: scheme_optimized_eval(operand, env))
+            return scheme_apply(procedure, args, env)
 
 ################################################################
 # Uncomment the following line to apply tail call optimization #

@@ -1,3 +1,10 @@
+;;; Scheme Project
+;;; Name: Krishna Parashar and Andrea Melendez
+;;; Login: cs61a-wh and cs61a-akz
+;;; TA: Julia Oh
+;;; Section: 11
+
+
 ;;; Test cases for Scheme.
 ;;;
 ;;; In order to run only a prefix of these examples, add the line
@@ -120,11 +127,6 @@ circumference
 (a-plus-abs-b 3 -2)
 ; expect 5
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Move the following (exit) line to run additional tests. ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(exit)
 
 ;;; 1.1.7
 
@@ -549,6 +551,8 @@ one-through-four
 (add2xy 3 7)
 ; expect 13
 
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Scheme Implementations ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -566,11 +570,31 @@ one-through-four
 ;; Merge two lists LIST1 and LIST2 and returns
 ;; the merged lists.
 (define (merge list1 list2)
-    ; *** YOUR CODE HERE ***
-    nil)
+    (cond ((null? list1) list2)
+          ((null? list2) list1)
+          ((< (car list1) (car list2)) (cons (car list1) 
+              (merge (cdr list1) list2)))
+          (else (cons (car list2) 
+              (merge (cdr list2) list1)))))
+        
 
 (merge '(1 5 7 9) '(4 8 10))
 ; expect (1 4 5 7 8 9 10)
+
+(merge '(1 2 7 394 903 8905) '(1 4 5 7 9 27))
+; expect (1 1 2 4 5 7 7 9 27 394 903 8905)
+
+(merge '(92 93 94 95 96) '(92 95 98 2001))
+; expect (92 92 93 94 95 95 96 98 2001)
+
+(merge '(1999 2000 2001 2002 2003 2004) '(1888 1899 1900 2008 2009 2010 2011))
+; expect (1888 1899 1900 1999 2000 2001 2002 2003 2004 2008 2009 2010 2011)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Move the following (exit) line to run additional tests. ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(exit)
 
 ; Problem A19
 
