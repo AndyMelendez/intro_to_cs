@@ -590,24 +590,26 @@ one-through-four
 (merge '(1999 2000 2001 2002 2003 2004) '(1888 1899 1900 2008 2009 2010 2011))
 ; expect (1888 1899 1900 1999 2000 2001 2002 2003 2004 2008 2009 2010 2011)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Move the following (exit) line to run additional tests. ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(exit)
 
 ; Problem A19
 
 ;; The number of ways to change TOTAL with DENOMS
 ;; At most MAX-COINS total coins can be used.
 (define (count-change total denoms max-coins)
-  ; *** YOUR CODE HERE ***
-  nil)
+    (cond ((= max-coins 0) 0) ;if a < 0: return 0
+          ((= total 0) 1) ;if a == 0: return 1
+          ((null?) denoms 0) ;if len(kinds) == 0: return 0
+          ;return count_change(a, kinds[1:]) + count_change(a - d, kinds)
 
 (define us-coins '(50 25 10 5 1))
 (count-change 20 us-coins 18)
 ; expect 8
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Move the following (exit) line to run additional tests. ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(exit)
 
 ; Problem B20
 
