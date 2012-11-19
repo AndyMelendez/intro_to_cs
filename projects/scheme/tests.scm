@@ -596,10 +596,9 @@ one-through-four
 ;; The number of ways to change TOTAL with DENOMS
 ;; At most MAX-COINS total coins can be used.
 (define (count-change total denoms max-coins)
-    (cond ((= max-coins 0) 0) ;if a < 0: return 0
-          ((= total 0) 1) ;if a == 0: return 1
-          ((null?) denoms 0) ;if len(kinds) == 0: return 0
-          ;return count_change(a, kinds[1:]) + count_change(a - d, kinds)
+    (cond ((= total 0) 1) ((or (< total 0) (null? denoms) (= max-coins 0)) 0) ; Base Cases
+    (else (+ (count-change total (cdr denoms) max-coins)
+    (count-change (- total (car denoms)) denoms (- max-coins 1)))))) ; Recursive Call
 
 (define us-coins '(50 25 10 5 1))
 (count-change 20 us-coins 18)
