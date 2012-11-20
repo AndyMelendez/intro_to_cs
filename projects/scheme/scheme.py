@@ -228,6 +228,8 @@ def do_define_form(vals, env):
         values = scheme_eval(vals[1], env)
         env.define(target, values)
     elif isinstance(target, Pair):
+        if not scheme_symbolp(target[0]):
+            raise SchemeError(str(target[0]) + " is not a valid symbol")
         scheme_expression = Pair(target.second, vals.second)
         lamda_expression = do_lambda_form(scheme_expression, env)
         env.define(target[0], lamda_expression)
@@ -344,12 +346,12 @@ def check_formals(formals):
     	raise SchemeError(formals + 'not a well-formed list of symbols')
     
     parameters = []
-    for s_symbol in formals:
-    	if s_symbol in parameters:
+    for symbol in formals:
+    	if symbol in parameters:
     		raise SchemeError(str(symbol) + ': repeated symbols')
-    	elif not scheme_symbolp(s_symbol):
+    	elif not scheme_symbolp(symbol):
     		raise SchemeError(str(symbol) + ': parameter is not a valid symbol')
-    	parameters.append(s_symbol)
+    	parameters.append(symbol)
 
 ##################
 # Tail Recursion #
@@ -360,21 +362,21 @@ def scheme_optimized_eval(expr, env):
     while True:
         if expr is None:
             raise SchemeError("Cannot evaluate an undefined expression.")
-
+        
         # Evaluate Atoms
         if scheme_symbolp(expr):
             return env.lookup(expr)
         elif scheme_atomp(expr):
             return expr
-
+        
         # All non-atomic expressions are lists.
         if not scheme_listp(expr):
             raise SchemeError("malformed list: {0}".format(str(expr)))
         first, rest = expr.first, expr.second
-
+        
         # Evaluate Combinations
         if first in LOGIC_FORMS:
-            "*** YOUR CODE HERE ***"
+            expr = LOGIC_FORMS[first](rest, env)
         elif first == "lambda":
             return do_lambda_form(rest, env)
         elif first == "mu":
@@ -384,19 +386,20 @@ def scheme_optimized_eval(expr, env):
         elif first == "quote":
             return do_quote_form(rest)
         elif first == "let":
-            "*** YOUR CODE HERE ***"
             expr, env = do_let_form(rest, env)
-            return scheme_optimized_eval(expr, env)
         else:
-            "*** YOUR CODE HERE ***"
-            procedure = scheme_optimized_eval(first, env)
-            args = rest.map(lambda operand: scheme_optimized_eval(operand, env))
-            return scheme_apply(procedure, args, env)
+            procedure, args = scheme_eval(first, env), rest.map(lambda operand: scheme_eval(operand, env))
+            if isinstance(procedure, LambdaProcedure):
+                env, expr = procedure.env.make_call_frame(procedure.formals, args), procedure.body
+            elif isinstance(procedure, MuProcedure):
+                env, expr = env.make_call_frame(procedure.formals, args), procedure.body
+            else:
+                return scheme_apply(procedure, args, env) #NOT TAIL RECURSIVE. AHHH. BLERGH. YEECH. Nooooooooooo!
 
 ################################################################
 # Uncomment the following line to apply tail call optimization #
 ################################################################
-# scheme_eval = scheme_optimized_eval
+scheme_eval = scheme_optimized_eval
 
 
 ################

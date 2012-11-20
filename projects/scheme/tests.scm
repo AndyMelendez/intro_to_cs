@@ -1,10 +1,3 @@
-;;; Scheme Project
-;;; Name: Krishna Parashar and Andrea Melendez
-;;; Login: cs61a-wh and cs61a-akz
-;;; TA: Julia Oh
-;;; Section: 11
-
-
 ;;; Test cases for Scheme.
 ;;;
 ;;; In order to run only a prefix of these examples, add the line
@@ -60,6 +53,16 @@
 ; expect 57
 
 
+'(1 2 3)
+; expect (1 2 3)
+
+'('a 2 3)
+; expect ((quote a) 2 3)
+
+'hoy
+; expect hoy
+
+
 ;;; 1.1.2
 
 (define size 2)
@@ -78,6 +81,23 @@ size
 circumference
 ; expect 62.8318
 
+;;; More additional tests
+
+(define hub 123)
+(define tab 100)
+(* hub (* tab tab))
+; expect 1230000
+
+(define pounds 23)
+(define kilo-constant 0.453592)
+(* pounds kilo-constant)
+; expect 10.432616
+
+(define nothing 10)
+(define something 100)
+(* nothing (* something (/ something nothing)))
+; expect 10000
+ 
 ;;; 1.1.4
 
 (define (square x) (* x x))
@@ -104,9 +124,23 @@ circumference
 (f 5)
 ; expect 136
 
-
-
-
+(define x-cubing (lambda (x) (* x x x )))
+(x-cubing 23)
+; expect 12167
+ 
+(define y-cubing (lambda (y) (* y y y)))
+(y-cubing 23)
+; expect 12167
+ 
+(define y_sum (lambda (y) (+ y 3)))
+(y_sum 4)
+; expect 7
+ 
+(define (cubing-sum a b)
+    ( + (x-cubing a) (y-cubing b)))
+(cubing-sum 1 2)
+; expect 9
+ 
 ;;; 1.1.6
 
 (define (abs x)
@@ -127,6 +161,15 @@ circumference
 (a-plus-abs-b 3 -2)
 ; expect 5
 
+(define (du-mar x y)
+   ((if (< y 1) - *) x y))
+(du-mar -3 1)
+; expect -3
+
+(define (oulalala x y z)
+   ((if (> (* x y) x) * /) x z))
+(oulalala 1 2 3)
+; expect 3
 
 ;;; 1.1.7
 
@@ -155,6 +198,21 @@ circumference
 (square (sqrt 1000))
 ; expect 1000.000369924366
 
+(sqrt (- 140 20))
+; expect 10.954451151558928
+
+(square (sqrt 120)) 
+; expect 120.00000003189072
+
+(sqrt ( + 80 7))
+; expect 9.32739845997726
+
+(square (sqrt 87))
+; expect 87.00036203118617
+
+(sqrt 23)
+; expect 4.795844112917605
+
 ;;; 1.1.8
 
 (define (sqrt x)
@@ -178,6 +236,21 @@ circumference
 
 (square (sqrt 1000))
 ; expect 1000.000369924366
+
+(sqrt (- 140 20))
+; expect 10.954451151558928
+
+(square (sqrt 120)) 
+; expect 120.00000003189072
+
+(sqrt ( + 80 7))
+; expect 9.32739845997726
+
+(square (sqrt 87))
+; expect 87.00036203118617
+
+(sqrt 23)
+; expect 4.795844112917605
 
 ;;; 1.3.1
 
@@ -224,6 +297,33 @@ circumference
   (* x y))
 ; expect 21
 
+(define x 4)
+(let ((x 4)
+      (y (+ x 2)))
+  (* x y))
+; expect 24
+   
+(define ix 1)
+(define x 0)
+(+ (let ((ix 3))
+     (+ x (* ix 10)))
+   ix)
+; expect 31
+
+(define y 15)
+(+ (let ((y 1))
+     (+ y (* y 1)))
+   y)
+; expect 17
+
+((lambda (a b c) (+ a b (sqrt c))) 1 2 3)
+; expect 4.732142857142858
+
+(define x 0)
+(let ((x 2)
+      (y (+ x 2)))
+  (* x y))
+; expect 4
 
 ;;; 2.1.1
 
@@ -345,6 +445,22 @@ one-through-four
 (count-leaves (list x x))
 ; expect 8
 
+(* (count-leaves (list x x)) 3)
+; expect 24
+
+(count-leaves (list x x x))
+; expect 12
+
+(map abs (list -1 -2.1 11.9 18))
+; expect (1 2.1 11.9 18)
+
+(define two-through (list 2 3.4 1 4.4))
+two-through
+; expect (2 3.4 1 4.4)
+
+(car two-through)
+; expect 2
+
 ;;; 2.2.3
 
 (define (odd? x) (= 1 (remainder x 2)))
@@ -385,6 +501,21 @@ one-through-four
                       (enumerate-tree (cdr tree))))))
 (enumerate-tree (list 1 (list 2 (list 3 4)) 5))
 ; expect (1 2 3 4 5)
+
+(filter odd? (list 1 3 7 2 4))
+; expect (1 3 7)
+
+(accumulate + 0 (list 1 5 10 20 5))
+; expect 41
+
+(enumerate-interval 1 10)
+; expect (1 2 3 4 5 6 7 8 9 10)
+
+(accumulate cons nil (list 2 3 4 5))
+; expect (2 3 4 5)
+
+(enumerate-tree (list 4 (list 6 (list 7 8)) 10))
+; expect (4 6 7 8 10)
 
 ;;; 2.3.1
 
@@ -479,6 +610,24 @@ one-through-four
 (riff-shuffle (riff-shuffle (riff-shuffle (list 1 2 3 4 5 6 7 8))))
 ; expect (1 2 3 4 5 6 7 8)
 
+(riff-shuffle (list 2 3 7 8 9 10 11 18))
+; expect (2 9 3 10 7 11 8 18)
+
+((apply-twice riff-shuffle) (list 2 3 7 8 9 10 11 18))
+; expect (2 7 9 11 3 8 10 18)
+
+(zip (list 2 3 8 4) (list 1 9 2 8))
+; expect ((2 1) (3 9) (8 2) (4 8))
+
+(fact 20)
+; expect 2432902008176640000
+
+(equal? '(1 2 (two)) '(1 2 (two)))
+; expect True
+
+(memq 'soda '(pear banana prune))
+; expect False
+
 ;;; Additional tests
 
 (apply square '(2))
@@ -551,7 +700,26 @@ one-through-four
 (add2xy 3 7)
 ; expect 13
 
+(define add_o (mu (o) (+ o y)))
+(define add2_oy (lambda (o y) (add_o (+ o o))))
+(add2_oy 4 5)
+; expect 13
 
+(define (print-and-square x)
+  (print x)
+  (square x))
+(print-and-square 9)
+; expect 9
+; expect 81
+
+(and 1 2 4)
+; expect 4
+
+(if '() 19 2)
+; expect 19
+
+(if nil 87 12)
+; expect 87
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Scheme Implementations ;;;
@@ -564,6 +732,8 @@ one-through-four
     (+ 1 (len (cdr s)))))
 (len '(1 2 3 4))
 ; expect 4
+(len '(1 2 3))
+; expect 3
 
 ; Problem 18
 
@@ -576,19 +746,12 @@ one-through-four
               (merge (cdr list1) list2)))
           (else (cons (car list2) 
               (merge (cdr list2) list1)))))
-        
 
 (merge '(1 5 7 9) '(4 8 10))
 ; expect (1 4 5 7 8 9 10)
 
-(merge '(1 2 7 394 903 8905) '(1 4 5 7 9 27))
-; expect (1 1 2 4 5 7 7 9 27 394 903 8905)
-
-(merge '(92 93 94 95 96) '(92 95 98 2001))
-; expect (92 92 93 94 95 95 96 98 2001)
-
-(merge '(1999 2000 2001 2002 2003 2004) '(1888 1899 1900 2008 2009 2010 2011))
-; expect (1888 1899 1900 1999 2000 2001 2002 2003 2004 2008 2009 2010 2011)
+(merge '(1 3 5 7) '(1 4 8))
+; expect (1 1 3 4 5 7 8)
 
 
 ; Problem A19
@@ -596,44 +759,45 @@ one-through-four
 ;; The number of ways to change TOTAL with DENOMS
 ;; At most MAX-COINS total coins can be used.
 (define (count-change total denoms max-coins)
-    (cond ((= total 0) 1) ((or (< total 0) (null? denoms) (= max-coins 0)) 0) ; Base Cases
+    (cond ((= total 0) 1) ((or (< total 0) (null? denoms) (= max-coins 0)) 0) ;; Base Cases
     (else (+ (count-change total (cdr denoms) max-coins)
-    (count-change (- total (car denoms)) denoms (- max-coins 1)))))) ; Recursive Call
-
+    (count-change (- total (car denoms)) denoms (- max-coins 1)))))) ;; Recursive Call
 (define us-coins '(50 25 10 5 1))
 (count-change 20 us-coins 18)
 ; expect 8
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Move the following (exit) line to run additional tests. ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(exit)
 
 ; Problem B20
 
 ;; The number of ways to partition TOTAL, where
 ;; each partition must be at most MAX-VALUE
 (define (count-partitions total max-value)
-  ; *** YOUR CODE HERE ***
-  nil)
-
+     (cond ((< total 0) 0)
+        ((<= max-value 0) 0)
+        ((= total 0) 1)
+        (else (+ (count-partitions (- total max-value) max-value)
+          (count-partitions total (- max-value 1))))
+))
 (count-partitions 5 3)
 ; expect 5
 ; Note: The 5 partitions are [[3 2] [3 1 1] [2 2 1] [2 1 1 1] [1 1 1 1 1]]
 
 ; Problem 21
 
-;; A list of all ways to partition TOTAL, where  each partition must
+;; A list of all ways to partition TOTAL, where each partition must
 ;; be at most MAX-VALUE and there are at most MAX-PIECES partitions.
 (define (list-partitions total max-pieces max-value)
-  ; *** YOUR CODE HERE ***
-  nil)
-
+   (define (helper total max-pieces max-value partitions sofar)
+    (cond ((< max-pieces 0) partitions)
+          ((= total 0) (cons sofar partitions))
+          ((<= max-value 0) partitions)
+          (else (append (helper (- total max-value) (- max-pieces 1) max-value partitions (append sofar (list max-value))) (helper total max-pieces (- max-value 1) partitions sofar)))))
+  (helper total max-pieces max-value '() '())
+) 
 (list-partitions 5 2 4)
 ; expect ((4 1) (3 2))
+
 (list-partitions 7 3 5)
-; expect ((5 1 1) (4 2 1) (3 3 1) (3 2 2) (5 2) (4 3))
+; expect ((5 2) (5 1 1) (4 3) (4 2 1) (3 3 1) (3 2 2))
 
 ; Draw the hax image using turtle graphics.
 (define (hax n k)
@@ -644,8 +808,6 @@ one-through-four
 ;;;;;;;;;;;;;;;;;;;;
 ;;; Extra credit ;;;
 ;;;;;;;;;;;;;;;;;;;;
-
-(exit)
 
 ; Tail call optimization test
 (define (sum n total)
