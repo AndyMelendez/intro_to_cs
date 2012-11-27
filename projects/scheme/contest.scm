@@ -41,7 +41,7 @@
       (setpos 0 0)
       (pendown)
       (color 'black)
-	  (spiral 0.35 93 750)
+	  (spiral 0.35 93 720)
       (penup)
       (setpos 0 0)
       (pendown)
