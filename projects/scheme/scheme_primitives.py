@@ -383,13 +383,26 @@ def tscheme_clear():
     _tscheme_prep()
     turtle.clear()
 
+#Changed according to endorsed piazza post
 @primitive("color")
 def tscheme_color(c):
     """Set the color to C, a symbol such as red or '#ffc0c0' (representing
-    hexadecimal red, green, and blue values."""
+        hexadecimal red, green, and blue values."""
     _tscheme_prep()
-    check_type(c, Symbol, 0, "color")
+    check_type(c, scheme_symbolp, 0, "color")
     turtle.color(str(c))
+#END CHANGE
+
+#CODE ADDED
+def tscm_color2(r, g, b):
+    """Set the color to integer values r g b"""
+    _tscm_prep()
+    check_type(r, scm_numberp, 0, "color")
+    check_type(g, scm_numberp, 0, "color")
+    check_type(b, scm_numberp, 0, "color")
+    turtle.color(r.num_val, g.num_val, b.num_val)
+    return UNSPEC
+#END CODE ADDED
 
 @primitive("begin_fill")
 def tscheme_begin_fill():

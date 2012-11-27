@@ -1,0 +1,1 @@
+I changed the scheme_primatives.py's tscheme_color function to actually work based on piazza post 2666 which was endorsed by an instructor.
