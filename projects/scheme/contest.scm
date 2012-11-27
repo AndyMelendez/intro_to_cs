@@ -5,13 +5,13 @@
 ;;; Title: You Know What It Is: Black & Yellow
 ;;;
 ;;; Description/Haiku:
-;;;    Hilbert's space-filler
-;;;    Fills Mandelbrot set. Outside,
-;;;    A coloring scheme.
+;;;    Reaching for heaven,
+;;;    Getting closer to the Sun,
+;;;    Like a Sunflower.
 
+(speed 0)
 
-(speed 99999)
-
+;; Creates Black Background
 (define side 1)
 (define ang 91)
 (speed 9999999)
@@ -21,6 +21,7 @@
 (circle 1000)
 (end_fill)
 
+;; Executes Spirals
 (define (spiral increment angle iterations)
   (define (drawer i) 
     (cond ((= i iterations) '())
@@ -30,31 +31,30 @@
         (drawer 0)
 )
 
+;; Dictates Drawing
 (define (draw)
   (begin (
 	  (setpos 0 0)
       (color 'yellow)
-      (spiral 0.45 93 890)
+      (spiral 0.45 93 875)
       (penup)
       (setpos 0 0)
       (pendown)
       (color 'black)
-	  (spiral 0.35 93 850)
+	  (spiral 0.35 93 750)
       (penup)
       (setpos 0 0)
       (pendown)
-      (color 'darkgreen)
-      (spiral 0.45 93 600)
+      (color 'brown)
+      (spiral 0.60 93 200)
       (penup)
       (setpos 0 0)
       (pendown)
       (color 'black)
-	  (spiral 0.45 93 500)
+	  (spiral 0.45 93 250)
 	  )
   )
 )
-
-
 
 (draw)
 (hideturtle)
