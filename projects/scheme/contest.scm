@@ -8,6 +8,8 @@
 ;;;    Reaching for heaven,
 ;;;    Getting closer to the Sun,
 ;;;    Like a Sunflower.
+;;;
+;;; Time to Complete: 2:25 or 145 seconds
 
 (speed 0)
 
@@ -57,7 +59,7 @@
       (setpos 0 0)
       (pendown)
       (color 'black)
-	  (spiral 0.35 93 300)
+	  (spiral 0.25 93 450)
 	  )
   )
 )
