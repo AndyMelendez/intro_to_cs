@@ -1,4 +1,4 @@
-# 61A Homework 7
+# 61A Homework 10
 # Name: Krishna Parashar and Andrea Melendez
 # Login: cs61a-wh and cs61a-akz
 # TA: Julia Oh

@@ -133,6 +133,7 @@ def interpret_mobile(s):
             return interpret_mobile(t + s[:next_T] + s[(next_T + 1):])
     return None
 
+#finish Q3
 
 # Q3.
 
@@ -163,8 +164,7 @@ class Stream(object):
         return 'Stream({0}, <...>)'.format(repr(self.first))
     
     def __iter__(self):
-        """Return an iterator over the elements in the stream.
-            
+        """Return an iterator over the elements in the stream.        
             >>> s = make_integer_stream(1) # [1, 2, 3, 4, 5, ...]
             >>> list(zip(range(6), s))
             [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6)]
@@ -184,15 +184,13 @@ class Stream(object):
             >>> [s[i] for i in range(7,10)]
             [12, 13, 14]
             """
-        """
-        runs for infinity when evaluating s[1]
-        while (k > 0):
-            self, k = self.rest, k + 1
+        while k is not Stream.empty and k>0:
+            self, k = self.rest, k - 1
         return self.first
-        """
+        
 
 def make_integer_stream(first=1):
-    """Return an infinite stream of increasing integers."""
+    """Returns an infinite stream of increasing integers."""
     def compute_rest():
         return make_integer_stream(first+1)
     return Stream(first, compute_rest)
@@ -211,9 +209,11 @@ def scale_stream(s, k):
         >>> scale_stream(s.rest, 10)[2]
         300
         """
-    return Stream(k * s.first, scale_stream(s.rest, k))
+    def compute_rest():
+        return scale_stream(s.rest, k)
+    return Stream(k * s.first, compute_rest)
 
-
+# finish Q5
 # Q5.
 
 def merge(s0, s1):
@@ -237,7 +237,8 @@ def merge(s0, s1):
     elif e1 < e0:
         return Stream(e1, lambda: merge(s0, s1.rest))
     else:
-        "*** YOUR CODE HERE ***"
+        return Stream(e1, lambda: merge(s0.rest, s1.rest))
+
 
 def make_s():
     """Return a stream over all positive integers with only factors 2, 3, & 5.
@@ -246,8 +247,12 @@ def make_s():
         >>> [s[i] for i in range(20)]
         [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 16, 18, 20, 24, 25, 27, 30, 32, 36]
         """
+    ints = make_integer_stream(1)
+    twos = scale_stream(ints, 2)
+    threes = scale_stream(ints, 3)
+    fives = scale_stream(ints, 5)
     def rest():
-        "*** YOUR CODE HERE ***"
+        return merge(twos, merge(threes, fives))
     s = Stream(1, rest)
     return s
 
@@ -277,8 +282,8 @@ def interleave(*iterables):
         (1, 2, 3, 4, 5, 6, 7, 8)
         """
     "*** YOUR CODE HERE ***"
-
+"""s
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-
+"""
